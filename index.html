@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="Anticipate, Adapt, Act: A Hybrid Framework for Task Planning">
+    <meta name="keywords" content="task planning, human robot collaboration, probabilistic planning">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Anticipate, Adapt, Act</title>
+
+
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+    <link rel="stylesheet" href="./static/css/bulma.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="./static/css/index.css">
+    <link rel="icon" href="./static/images/favicon.svg">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <script src="./static/js/bulma-carousel.min.js"></script>
+    <script src="./static/js/bulma-slider.min.js"></script>
+    <script src="./static/js/index.js"></script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+
+</head>
+
+<body>
+
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container is-max-desktop">
+                <div class="columns is-centered">
+                    <div class="column has-text-centered">
+                        <h1 class="title is-1 publication-title"><span class="">Anticipate, Adapt, Act</span>: A Hybrid Framework for Task Planning</h1>
+
+                        <div class="is-size-5 publication-authors">
+                            <span class="author-block">
+                            <a href="https://dnabanita7.github.io/">Nabanita Dash</a><sup>1</sup>,</span>
+                            <span class="author-block">
+                            <a href="www.linkedin.com/in/ayush-kaura">Ayush Kaura</a><sup>1</sup>,</span>
+                            <span class="author-block">
+                            <a href="https://www.linkedin.com/in/sssshivvvv/">Shivam Singh</a><sup>1</sup>,</span>                            
+                            <span class="author-block">
+                            <a href="https://github.com/theramandeep04">Ramandeep Singh</a><sup>1</sup>,
+                            </span>
+                            <br>
+                            <span class="author-block">
+                            <a href="https://snehasisb.github.io/">Snehasis Banerjee</a><sup>2</sup>,
+                            </span>
+                            <span class="author-block">
+                            <a href="https://homepages.inf.ed.ac.uk/msridhar/">Mohan Sridharan</a><sup>3</sup>,
+                            </span>
+                            <span class="author-block">
+                            <a href="https://faculty.iiit.ac.in/~mkrishna/">Madhava Krishna</a><sup>1</sup>
+                            </span>
+                        </div>
+
+                        <div class="is-size-5 publication-authors">
+                            <span class="author-block"><sup>1</sup>Robotics Research Center, IIIT Hyderabad, India,</span>
+                            <span class="author-block"><sup>2</sup>TCS Research, Tata Consultancy Services, India,</span>
+                            <span class="author-block"><sup>3</sup>School of Informatics, University of Edinburgh, UK</span>                            <!-- <br>
+                            <span class="author-block"><sup>⭐</sup>Equal contribution</span>
+                            <br> -->
+                        </div>
+
+                        <div class="column has-text-centered">
+                            <div class="publication-links">
+                                <span class="link-block">
+                                    <a href="./static/ECMR2025_paper_118.pdf.pdf" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="fas fa-file-pdf"></i>
+                                        </span>
+                                        <span>Paper</span>
+                                    </a>
+                                </span>
+                                <!-- <span class="link-block">
+                                    <a href=""
+                                        class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="ai ai-arxiv"></i>
+                                        </span>
+                                        <span>arXiv</span>
+                                    </a>
+                                </span> -->
+                                <span class="link-block">
+                                    <a href="https://github.com/dnabanita7/ECMR2025" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="fab fa-github"></i>
+                                        </span>
+                                        <span>Code</span>
+                                    </a>
+                                </span>
+                                <!-- <span class="link-block">
+                                    <a href="https://youtu.be/d9qBa6zbkXc?si=YrlD2pp_kUkFsG5l"
+                                    class="external-link button is-normal is-rounded is-dark"
+                                    target="_blank">
+                                    <span class="icon">
+                                        <i class="fab fa-youtube"></i>
+                                    </span>
+                                    <span>Video</span>
+                                    </a>
+                                </span> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero teaser">
+    <div class="container is-max-desktop">
+        <div class="hero-body">
+        <img src="./static/images/Teaser Figure.png" alt="Teaser Image" style="display: block; margin: 0 auto; width: 60%; height: auto;">
+        <h2 class="subtitle has-text-centered" style="text-align: center; margin-top: 20px; font-size: 1em;">
+            Consider a robot assisting an elderly human in a kitchen, say with getting a glass of water from the sink to the
+            kitchen counter. Due to mobility and stability limitations, there is uncertainty about whether the human can complete
+            the task successfully; they may end up dropping the water glass. In such situations, we would expect the robot to
+            anticipate the potential for negative outcomes, e.g., the glass being dropped, and either prevent the potential negative
+            outcome, e.g., by fetching the water glass, or prepare to deal with the outcome, e.g., by making sure it has access
+            to the mop needed to clear the water spill.  Our framework enables the robot to anticipate such failures; 
+            the robot then either prevents failure by completing the task, or prepares to recover from the failure by preparing 
+            to clean the potential water spill and complete the task.
+        </h2>
+        </div>
+    </div>
+    </section>
+    <section class="section">
+    <div class="container is-max-desktop">
+        <!-- Abstract Section -->
+        <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+            <h2 class="title is-3">Abstract</h2>
+            <div class="content has-text-justified">
+            <p>
+            Anticipating and adapting to potential failures is a key capability that robots require to collaborate effectively 
+            with humans in complex domains. This continues to be a challenge despite the impressive performance of state of the
+            art AI planning systems and Large Language Models (LLMs) because of the uncertainty associated with the tasks and their
+            outcomes. 
+            
+            Toward addressing this challenge, we present a hybrid framework that integrates the generic prediction capabilities of an LLM with the relational probabilistic sequential
+            decision-making capability of Relational Dynamic Influence Diagram Language (RDDL). For any given task, the robot reasons about the task and the capabilities of the human
+            attempting to complete it; predicts potential failures due to lack of ability (in the human) or relevant domain objects; 
+            and executes actions that prevent such failures or help recover from them. Experimental evaluation in the VirtualHome 3D 
+            simulation environment demonstrates substantial improvement in task completion, execution time, and collaboration.
+            </p>
+            </div>
+        </div>
+        </div>
+        <!-- End of Abstract Section -->
+    </div>
+    </section>
+
+    <section class="section" >
+        <div class="container is-max-desktop">
+            <div class="columns has-text-centered">
+                <div class="column is-full-width">
+                    <h2 class="title is-3">Video Explanation</h2>
+                    <div class="columns is-centered video-container">
+                        <video controls muted poster="./static/images/Pipeline Diagram.svg" preload="none"
+                            src="./static/videos/ECMR2025_video_118.mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="section" style="background-color: rgb(252, 252, 252);">
+        <div class="container is-max-desktop">
+            <div class="columns has-text-centered">
+                <div class="column is-full-width">
+                    <h2 class="title is-3">Our Pipeline</h2>
+                    <img src="./static/images/Pipeline Diagram.svg">
+                    <div class="content has-text-justified my-4">
+                        <b>Framework's pipeline</b>: <b>(a)</b> LLM takes a prompt of task lists, user preferences, scene description, and user input, to predict a task sequence;
+                        <b>(b)</b> RDDL description of domain model and joint goal comprising current and predicted tasks is fed to PROST planner; 
+                        <b>(c)</b> Plan of actions to be executed by robot (and human) to achieve the goal, 
+                        including steps to be taken by the robot to prevent or recover from potential failures (e.g., broken objects, spills, item unavailability) in human's action execution.
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- <section class="section" style="background-color: rgb(252, 252, 252);">
+        <div class="container" is-max-desktop>
+            <div class="columns has-text-centered">
+                <div class="column is-full-width">
+                    <h2 class="title is-3">Qualitative Results (coming soon)</h2>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+
+    <!-- <section class="section">
+        <div class="container is-max-desktop">
+            <div class="columns has-text-centered">
+                <div class="column is-full-width">
+                    <h2 class="title is-3">More Results</h2>
+                    <video autoplay muted loop playsinline width="450px" style="border-radius: 10px;">
+                        <source src="./static/videos/add_chair_1.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+
+                    <video autoplay muted loop playsinline width="450px" style="border-radius: 10px;">
+                        <source src="./static/videos/add_laptop_1.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <video autoplay muted loop playsinline width="450px" style="border-radius: 10px;">
+                        <source src="./static/videos/add_monitor_1.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                     <video autoplay muted loop playsinline width="450px" style="border-radius: 10px;">
+                        <source src="./static/videos/add_pot_1.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+
+                    <video autoplay muted loop playsinline width="450px" style="border-radius: 10px;">
+                        <source src="./static/videos/add_shelf_1.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+
+                    <video autoplay muted loop playsinline width="450px" style="border-radius: 10px;">
+                        <source src="./static/videos/add_stool_1.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                
+                </div>
+    </section> -->
+
+    <!-- <section class="section" id="BibTeX" style="margin-bottom: 1rem;">
+        <div class="container is-max-desktop content">
+            <h2 class="title">BibTeX</h2>
+            <pre><code>@misc{,
+                title={}
+                author={},
+                year={2025},
+                journal={}
+                eprint={},
+                archivePrefix={},
+                primaryClass={}
+            }</code></pre>
+        </div>
+    </section> -->
+
+
+    <footer class="footer">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-8">
+                    <div class="content">
+                        <p>
+                            This website is licensed under a <a rel="license"
+                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+                                Commons Attribution-Share Alike 4.0 International License</a>. It is borrowing this <a
+                                href="https://github.com/nerfies/nerfies.github.io">source code</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <div hidden="hidden">
+        <script type="text/javascript" id="clustrmaps"
+            src="//clustrmaps.com/map_v2.js?d=u8jCh6ASsaYQO-ecRVYjHfPLH_j28OlssYDHZDHcQOY&cl=ffffff&w=a"></script>
+    </div>
+
+</body>
+
+</html>
