@@ -1,0 +1,64 @@
+non-fluents nf_cleaning_dishes_old_inst {
+    domain = cleaning_dishes_old;
+
+    // Objects in the domain
+    objects {
+        location : {countertop, sink};
+        item : {plate_1, plate_2, mop};
+        agent : {human, robot};
+    };
+
+    non-fluents {
+
+        COST(robot, sink, sink) = 0;
+        COST(robot, countertop, countertop) = 0;
+
+        COST(robot, sink, countertop) = 15;
+        COST(robot, countertop, sink) = 15;
+
+        COST(human, sink, sink) = 0;
+        COST(human, countertop, countertop) = 0;
+
+        COST(human, sink, countertop) = 10;
+        COST(human, countertop, sink) = 10;
+
+
+        COOKTOP(plate_1) = true;
+        COOKTOP(plate_2) = true;
+
+        FRAGILE(plate_1) = false;
+        FRAGILE(plate_2) = true;
+        EQUAL(plate_1, plate_2) = true;
+
+        DESTINATION(plate_1, sink) = true;
+        DESTINATION(plate_2, sink) = true;
+
+        MOP_ITEM(mop) = true;
+
+    };
+}
+
+instance cleaning_dishes_old_inst {
+    domain = cleaning_dishes_old;
+    non-fluents = nf_cleaning_dishes_old_inst;
+
+    // Initial state definition
+    init-state {
+
+        obj-loc(plate_1, countertop) = true;
+        obj-loc(plate_2, countertop) = true;
+
+        agent-loc(robot, countertop) = true;
+        agent-loc(human, sink) = true;
+
+        obj-loc(mop, sink) = true;
+
+        cleaned(countertop) = true;
+        cleaned(sink) = false;
+    };
+
+    // Instance settings
+    max-nondef-actions = 2;
+    horizon = 35;
+    discount = 1.0;
+}

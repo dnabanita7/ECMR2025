@@ -1,0 +1,71 @@
+
+non-fluents nf_instance_serve_breakfast_fruits_inst {
+    domain = domain_x_robot_anticipation_serve_breakfast_fruits;
+
+    // Objects in the domain
+    objects {
+        location : {kitchencounter, coffeetable, cabinet};
+        item : {banana, plate, plate_1, dishbowl_1, mop, apple, knife, dishbowl};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+        COST(robot, kitchencounter, kitchencounter) = 0;
+COST(robot, kitchencounter, coffeetable) = 12;
+COST(robot, kitchencounter, cabinet) = 16;
+COST(robot, coffeetable, kitchencounter) = 12;
+COST(robot, coffeetable, coffeetable) = 0;
+COST(robot, coffeetable, cabinet) = 15;
+COST(robot, cabinet, kitchencounter) = 12;
+COST(robot, cabinet, coffeetable) = 16;
+COST(robot, cabinet, cabinet) = 0;
+        FRAGILE(plate) = true;
+FRAGILE(dishbowl) = true;
+FRAGILE(plate_1) = true;
+FRAGILE(dishbowl_1) = true;
+        FOOD_ITEM(apple) = true;
+FOOD_ITEM(banana) = true;
+        MOP_ITEM(mop) = true;
+        CONTAINER(plate) = true;
+CONTAINER(dishbowl) = true;
+CONTAINER(plate_1) = true;
+CONTAINER(dishbowl_1) = true;
+        EQUAL(dishbowl, dishbowl_1) = true;
+EQUAL(plate, plate_1) = true;
+        APPLIANCE(cabinet) = true;
+        
+        GOAL_0(apple, dishbowl, coffeetable) = true;
+GOAL_1(banana, dishbowl, coffeetable) = true;
+        DESTINATION_0(apple, coffeetable) = true;
+DESTINATION_1(banana, coffeetable) = true;
+DESTINATION_2(dishbowl, coffeetable) = true;
+DESTINATION_3(knife, kitchencounter) = true;
+
+    };
+}
+
+instance instance_serve_breakfast_fruits {
+    domain = domain_x_robot_anticipation_serve_breakfast_fruits;
+    non-fluents = nf_instance_serve_breakfast_fruits_inst;
+
+    init-state {
+        agent-loc(robot, kitchencounter) = true;
+        human-loc(human, cabinet) = true;
+
+        obj-loc(mop, cabinet) = true;
+
+        obj-loc(banana, kitchencounter) = true;
+obj-loc(plate, kitchencounter) = true;
+obj-loc(plate_1, kitchencounter) = true;
+obj-loc(dishbowl_1, kitchencounter) = true;
+obj-loc(apple, kitchencounter) = true;
+obj-loc(knife, kitchencounter) = true;
+obj-loc(dishbowl, kitchencounter) = true;
+    };
+
+    max-nondef-actions = 1;
+    horizon = 35;
+    discount = 1.0;
+}
+    

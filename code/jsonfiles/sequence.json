@@ -1,0 +1,83 @@
+{
+  "user_1": {
+    "sequence_1": [
+      "prepare food",
+      "serve the food"
+    ],
+    "sequence_2": [
+      "prepare food",
+      "serve the food"
+    ],
+    "sequence_3": [
+      "wash the dishes",
+      "clean the room (kitchen)",
+      "clean the room (bathroom)"
+    ],
+    "description": "User 1 is a disciplined employee who wakes up early to prepare for work. They make a healthy breakfast and ensure their office clothes are ready. If clothes are dirty, they do laundry before preparing them. In the evening, they prepare casual clothes (if clean) or wash them. Dinner is prepared and served as a healthy meal. Before sleeping, they ensure the house is clean, tidying up all dirty rooms and washing dishes."
+  },
+  "user_2": {
+    "sequence_1": [
+      "prepare lunch (salmon)",
+      "serve lunch (salmon) (location=dining table)",
+      "serve a drink (coffee)"
+    ],
+    "sequence_2": [
+      "serve dinner (pizza) (location=coffee table)",
+      "clean the room (bathroom) (object options=mop, garbagecan)",
+      "serve a drink"
+    ],
+    "sequence_3": [
+      "do the laundry",
+      "serve breakfast (eggs) (location=coffee table)",
+      "serve a drink",
+      "wash the dishes"
+    ],
+    "description": "User 2 follows a mix of sporadic chores and convenient meal choices. They prepare a healthy lunch but do not wash dishes or clean the room. In the evening, they eat leftover pizza and clean the bathroom. In the morning, they serve breakfast but do not prepare it. They wash dishes occasionally and do laundry in the morning. This pattern suggests a preference for convenience over structured planning."
+  },
+  "user_3": {
+    "sequence_1": [
+      "serve the food (food options=healthy_bf)",
+      "clean the room (room options=kitchen) (object options=mop)",
+      "do the laundry"
+    ],
+    "sequence_2": [
+      "do the laundry",
+      "prepare dinner (options=casual)",
+      "serve the food (food options=casual)",
+      "clean the room (room options=bathroom) (object options=mop, garbagecan)"
+    ],
+    "description": "User 3 prioritizes cleaning and meal preparation. In the morning, they serve a healthy breakfast, clean the kitchen, and do laundry. In the evening, they do laundry again before preparing and serving dinner. If spoiled food is found, they adjust their meal choice accordingly. They clean the bathroom afterward. This pattern suggests a mix of structured routines with adaptive meal preparation."
+  },
+  "user_4": {
+    "sequence_1": [
+      "serve a drink (options=coffee)",
+      "clean the room (room options=bathroom) (object options=mop)"
+    ],
+    "sequence_2": [
+      "put leftover food in the fridge",
+      "clean the room (room options=closet) (object options=mop)",
+      "start office work"
+    ],
+    "description": "User 4 follows a structured yet reactive approach to tasks. In the morning, they start with coffee and clean the bathroom. In the afternoon, after finishing lunch, they store leftovers, clean the closet, and begin office work. This suggests a tendency to organize their space before work. An assistive system can predict their cleaning habits before transitioning to focused activities."
+  },
+  "user_5": {
+    "sequence_1": [
+      "clean the room (room options=bathroom) (object options=mop)",
+      "charge the cellphone"
+    ],
+    "sequence_2": [
+      "do the laundry",
+      "clean the room (room options=closet) (object options=mop)"
+    ],
+    "description": "User 5 has a structured cleaning routine, particularly on weekends. In the morning, they clean the bathroom and charge their cellphone. In the afternoon, they do laundry and clean the closet. Their task flow suggests a priority for household maintenance during weekends. An assistive system can predict these cleaning habits and suggest relevant tasks."
+  },
+  "user_6": {
+    "sequence_1": [
+      "prepare clothes (casual)",
+      "clean the room (room options=kitchen) (object options=garbagecan)",
+      "prepare dinner (options=junk)",
+      "serve the food (food options=junk)"
+    ],
+    "description": "User 6 follows a necessity-driven task approach. In the evening, they prepare casual clothes before cleaning the kitchen, throwing away spoiled food. Due to missing ingredients, they prepare a junk meal. This pattern suggests they adjust their routine based on availability. An assistive system can anticipate when they need to restock ingredients to improve meal quality."
+  }
+}

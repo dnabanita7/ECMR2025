@@ -1,0 +1,69 @@
+
+non-fluents nf_instance_serve_dinner_pizza_inst {
+    domain = domain_x_robot_anticipation_serve_dinner_pizza;
+
+    // Objects in the domain
+    objects {
+        location : {cabinet, oven, coffeetable, microwave};
+        item : {plate_1, broom, plate, pizza-base};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+        COST(robot, cabinet, cabinet) = 0;
+COST(robot, cabinet, oven) = 10;
+COST(robot, cabinet, coffeetable) = 11;
+COST(robot, cabinet, microwave) = 15;
+COST(robot, oven, cabinet) = 15;
+COST(robot, oven, oven) = 0;
+COST(robot, oven, coffeetable) = 15;
+COST(robot, oven, microwave) = 17;
+COST(robot, coffeetable, cabinet) = 10;
+COST(robot, coffeetable, oven) = 10;
+COST(robot, coffeetable, coffeetable) = 0;
+COST(robot, coffeetable, microwave) = 11;
+COST(robot, microwave, cabinet) = 17;
+COST(robot, microwave, oven) = 16;
+COST(robot, microwave, coffeetable) = 16;
+COST(robot, microwave, microwave) = 0;
+        FRAGILE(plate_1) = true;
+FRAGILE(plate) = true;
+        FOOD_ITEM(pizza-base) = true;
+        MOP_ITEM(broom) = true;
+        CONTAINER(plate_1) = true;
+CONTAINER(plate) = true;
+        EQUAL(plate, plate_1) = true;
+        APPLIANCE(cabinet) = true;
+APPLIANCE(oven) = true;
+APPLIANCE(microwave) = true;
+        HAS-SWITCH(oven) = true;
+HAS-SWITCH(microwave) = true;
+        GOAL_0(pizza-base, plate, coffeetable) = true;
+        DESTINATION_0(pizza-base, oven) = true;
+DESTINATION_1(pizza-base, microwave) = true;
+DESTINATION_2(plate, coffeetable) = true;
+
+    };
+}
+
+instance instance_serve_dinner_pizza {
+    domain = domain_x_robot_anticipation_serve_dinner_pizza;
+    non-fluents = nf_instance_serve_dinner_pizza_inst;
+
+    init-state {
+        agent-loc(robot, cabinet) = true;
+        human-loc(human, microwave) = true;
+
+        obj-loc(broom, cabinet) = true;
+
+        obj-loc(plate_1, cabinet) = true;
+obj-loc(plate, cabinet) = true;
+obj-loc(pizza-base, cabinet) = true;
+    };
+
+    max-nondef-actions = 1;
+    horizon = 35;
+    discount = 1.0;
+}
+    

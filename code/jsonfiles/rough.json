@@ -1,0 +1,130 @@
+{
+    "tasks": {
+        "prepare food": {
+            "items": ["apple", "plate", "dishbowl"],
+            "locations": ["kitchencounter", "cabinet"],
+            "goal":["GOAL_0(apple, plate, kitchencounter) = true;"],
+            "destination":["DESTINATION_0(apple, kitchencounter) = true;", "DESTINATION_1(plate, kitchencounter) = true;"],
+            "rewards":["+ 80 * [sum_{?f: item} exists_{?l: location} (FOOD_ITEM(?f) ^ obj-loc'(?f, ?l) ^ DESTINATION_0(?f, ?l))]",
+                        "+ 80 * [sum_{?i: item} exists_{?l: location} (obj-loc'(?i, ?l) ^ DESTINATION_1(?i, ?l) ^ ~obj-break'(?i) ^ cleaned'(?l))]",
+                        "+ 200 * [sum_{?f: item, ?i: item, ?l: location} (FOOD_ITEM(?f) ^ CONTAINER(?i) ^ food-in'(?f, ?i) ^ GOAL_0(?f, ?i, ?l))]"]
+        },
+
+        "prepare breakfast cereal": {
+            "items": ["cereal", "dishbowl", "plate", "mug", "milk"],
+            "locations": ["kitchencounter", "cabinet", "fridge"],
+            "goal": ["GOAL_0(cereal, dishbowl, kitchencounter) = true;", "GOAL_1(milk, mug, kitchencounter) = true;"],
+            "destination": ["DESTINATION_0(cereal, kitchencounter) = true;", "DESTINATION_1(milk, kitchencounter) = true;", 
+                            "DESTINATION_2(milk, kitchencounter) = true;", "DESTINATION_3(mug, kitchencounter) = true;"],
+            "rewards":["+ 80 * [sum_{?f: item} exists_{?l: location} (FOOD_ITEM(?f) ^ obj-loc'(?f, ?l) ^ (DESTINATION_0(?f, ?l) | DESTINATION_1(?f, ?l)) )]",
+                        "+ 80 * [sum_{?i: item} exists_{?l: location} (obj-loc'(?i, ?l) ^ (DESTINATION_2(?i, ?l) | DESTINATION_3(?i, ?l)) ^ ~obj-break'(?i) ^ cleaned'(?l))]",
+                        "+ 200 * [sum_{?f: item, ?i: item, ?l: location} (FOOD_ITEM(?f) ^ CONTAINER(?i) ^ food-in'(?f, ?i) ^ (GOAL_0(?f, ?i, ?l) | GOAL_1(?f, ?i, ?l)) )]"]
+        },
+
+        "prepare breakfast toast": {
+            "items": ["breadslice", "plate"],
+            "locations": ["kitchencounter", "stove", "toaster", "fridge", "cabinet"],
+            "goal": ["GOAL_0(breadslice, plate, kitchencounter) = true;"],
+            "destination": ["DESTINATION_0(breadslice, toaster) = true;", "DESTINATION_1(breadslice, kitchencounter) = true;", 
+                            "DESTINATION_2(plate, kitchencounter) = true;"],
+            "rewards":["+ 80 * [sum_{?f: item} exists_{?l: location} (FOOD_ITEM(?f) ^ obj-loc'(?f, ?l) ^ (DESTINATION_0(?f, ?l) | DESTINATION_1(?f, ?l)) )]",
+                        "+ 80 * [sum_{?i: item} exists_{?l: location} (obj-loc'(?i, ?l) ^ DESTINATION_2(?i, ?l) ^ ~obj-break'(?i) ^ cleaned'(?l))]",
+                        "+ 200 * [sum_{?f: item, ?i: item, ?l: location} (FOOD_ITEM(?f) ^ CONTAINER(?i) ^ food-in'(?f, ?i) ^ GOAL_0(?f, ?i, ?l) )]"]
+
+        },
+
+        "prepare lunch salmon": {
+            "items": ["salmon", "plate"],
+            "locations": ["kitchencounter", "stove", "fridge", "microwave", "cabinet"],
+            "goal": ["GOAL_0(salmon, plate, kitchencounter) = true;"],
+            "destination": ["DESTINATION_0(salmon, stove) = true;", "DESTINATION_1(salmon, kitchencounter) = true;", 
+                            "DESTINATION_2(plate, kitchencounter) = true;"],
+            "rewards":["+ 80 * [sum_{?f: item} exists_{?l: location} (FOOD_ITEM(?f) ^ obj-loc'(?f, ?l) ^ (DESTINATION_0(?f, ?l) | DESTINATION_1(?f, ?l)) )]",
+                        "+ 80 * [sum_{?i: item} exists_{?l: location} (obj-loc'(?i, ?l) ^ DESTINATION_2(?i, ?l) ^ ~obj-break'(?i) ^ cleaned'(?l))]",
+                        "+ 200 * [sum_{?f: item, ?i: item, ?l: location} (FOOD_ITEM(?f) ^ CONTAINER(?i) ^ food-in'(?f, ?i) ^ GOAL_0(?f, ?i, ?l) )]"]
+        },
+
+        "serve the food cereal": {
+            "items": ["dishbowl", "plate", "cereal", "milk", "mug"],
+            "locations": ["coffeetable", "kitchencounter", "cabinet", "fridge"],
+            "goal": ["GOAL_0(cereal, dishbowl, coffeetable) = true;", "GOAL_1(milk, mug, coffeetable) = true;"],
+            "destination": ["DESTINATION_0(cereal, coffeetable) = true;", "DESTINATION_1(milk, coffeetable) = true;", 
+                            "DESTINATION_2(mug, coffeetable) = true;", "DESTINATION_3(dishbowl, coffeetable) = true;"],
+            "rewards":["+ 80 * [sum_{?f: item} exists_{?l: location} (FOOD_ITEM(?f) ^ obj-loc'(?f, ?l) ^ (DESTINATION_0(?f, ?l) | DESTINATION_1(?f, ?l)) )]",
+                        "+ 80 * [sum_{?i: item} exists_{?l: location} (obj-loc'(?i, ?l) ^ (DESTINATION_2(?i, ?l) | DESTINATION_3(?i, ?l)) ^ ~obj-break'(?i) ^ cleaned'(?l))]",
+                        "+ 200 * [sum_{?f: item, ?i: item, ?l: location} (FOOD_ITEM(?f) ^ CONTAINER(?i) ^ food-in'(?f, ?i) ^ (GOAL_0(?f, ?i, ?l) | GOAL_1(?f, ?i, ?l)) )]"]
+        },
+
+        "serve a drink water": {
+            "items": ["waterglass"],
+            "locations": ["coffeetable", "kitchencounter", "cabinet"],
+            "goal": [],
+            "destination": ["DESTINATION_0(waterglass, coffeetable) = true;"],
+            "rewards":["+ 80 * [sum_{?i: item} exists_{?l: location} (obj-loc'(?i, ?l) ^ DESTINATION_0(?i, ?l) ^ ~obj-break'(?i) ^ cleaned'(?l))]"]
+        },
+
+        "serve a drink coffee": {
+            "items": ["coffee", "glass", "pan", "water"],
+            "locations": ["cabinet", "coffeemaker", "coffeetable", "stove", "faucet"],
+            "goal": ["GOAL_0(coffee, glass, coffeemaker) = true;", "GOAL_1(coffee, glass, coffeetable) = true;"],
+            "destination": ["DESTINATION_0(coffee, coffeemaker) = true;", "DESTINATION_1(water, coffeemaker) = true;", "DESTINATION_2(glass, coffeetable) = true;"],
+            "rewards":["+ 80 * [sum_{?f: item} exists_{?l: location} (FOOD_ITEM(?f) ^ obj-loc'(?f, ?l) ^ (DESTINATION_0(?f, ?l) | DESTINATION_1(?f, ?l)) )]",
+            "+ 80 * [sum_{?i: item} exists_{?l: location} (obj-loc'(?i, ?l) ^ DESTINATION_2(?i, ?l) ^ ~obj-break'(?i) ^ cleaned'(?l))]",
+            "+ 200 * [sum_{?f: item, ?i: item, ?l: location} (FOOD_ITEM(?f) ^ CONTAINER(?i) ^ food-in'(?f, ?i) ^ (GOAL_0(?f, ?i, ?l) | GOAL_1(?f, ?i, ?l)) )]"]
+        },
+
+        "serve breakfast eggs": {
+            "items": ["eggs", "plate", "pan"],
+            "locations": ["sink", "stove", "microwave", "kitchencounter", "cabinet"],
+            "goal": ["GOAL_0(eggs, pan, stove) = true;", "GOAL_1(eggs, plate, kitchencounter) = true;"],
+            "destination": ["DESTINATION_0(pan, stove) = true;", "DESTINATION_1(eggs, kitchencounter) = true;"],
+            "rewards": ["+ 80 * [sum_{?f: item} exists_{?l: location} (FOOD_ITEM(?f) ^ obj-loc'(?f, ?l) ^ (DESTINATION_0(?f, ?l) | DESTINATION_1(?f, ?l) ))]", 
+            "+ 80 * [sum_{?i: item} exists_{?l: location} (obj-loc'(?i, ?l) ^ DESTINATION_1(?i, ?l) ^ ~obj-break'(?i) ^ cleaned'(?l))]", 
+            "+ 200 * [sum_{?f: item, ?i: item, ?l: location} (FOOD_ITEM(?f) ^ CONTAINER(?i) ^ food-in'(?f, ?i) ^ (GOAL_0(?f, ?i, ?l) | GOAL_1(?f, ?i, ?l) ))]]"]
+        },
+
+        "serve breakfast fruits": {
+            "items": ["apple", "banana", "knife", "dishbowl", "plate"],
+            "locations": ["kitchencounter", "coffeetable", "cabinet"],
+            "goal": ["GOAL_0(apple, dishbowl, coffeetable) = true;", "GOAL_1(banana, dishbowl, coffeetable) = true;"],
+            "destination": ["DESTINATION_0(apple, coffeetable) = true;", "DESTINATION_1(banana, coffeetable) = true;", 
+                            "DESTINATION_2(dishbowl, coffeetable) = true;", "DESTINATION_3(knife, coffeetable) = true;"],
+            "rewards": ["+ 80 * [sum_{?f: item} exists_{?l: location} (FOOD_ITEM(?f) ^ obj-loc'(?f, ?l) ^ (DESTINATION_0(?f, ?l) | DESTINATION_1(?f, ?l) ))]", 
+                        "+ 80 * [sum_{?i: item} exists_{?l: location} (obj-loc'(?i, ?l) ^ (DESTINATION_2(?i, ?l) | DESTINATION_3(?i, ?l)) ^ ~obj-break'(?i) ^ cleaned'(?l))]", 
+                        "+ 200 * [sum_{?f: item, ?i: item, ?l: location} (FOOD_ITEM(?f) ^ CONTAINER(?i) ^ food-in'(?f, ?i) ^ (GOAL_0(?f, ?i, ?l) | GOAL_1(?f, ?i, ?l)) )]]"]                  
+        },
+
+        "wash the dishes": {
+            "items": ["plate", "cleaning_solution", "washingsponge", "soap"],
+            "locations": ["sink", "cabinet", "faucet"],
+            "goal": [],
+            "destination": ["DESTINATION_0(plate, sink) = true;", "DESTINATION_1(soap, sink) = true;", 
+                            "DESTINATION_2(washingsponge, sink) = true;"],
+            "rewards": ["+ 80 * [sum_{?i: item} exists_{?l: location} (obj-loc'(?i, ?l) ^ (DESTINATION_0(?i, ?l) | DESTINATION_1(?i, ?l) | DESTINATION_2(?i, ?l)) ^ ~obj-break'(?i) ^ cleaned'(?l))]", 
+                        "+ 200 * [sum_{?l: location} exists_{?i: item, ?l2: location} [switch_appliance(?l) ^ APPLIANCE(?l) ^ (obj-loc'(?i, ?l2) ^ DESTINATION_0(?i, ?l2)] ]"]        
+        },
+        
+        "do the laundry": {
+            "items": ["clothesshirt", "detergent"],
+            "locations": ["closet", "washingmachine", "cabinet"],
+            "goal": [],
+            "destination": ["DESTINATION_0(clothesshirt, washingmachine) = true;", "DESTINATION_1(detergent, washingmachine) = true;"],
+            "rewards": ["+ 80 * [sum_{?i: item} exists_{?l: location} (obj-loc'(?i, ?l) ^ (DESTINATION_0(?i, ?l) | DESTINATION_1(?i, ?l)) ^ cleaned'(?l))]", 
+                        "+ 200 * [sum_{?l: location} exists_{?i: item, ?i2: item} [switch_appliance(?l) ^ APPLIANCE(?l) ^ (obj-loc'(?i, ?l) ^ DESTINATION_0(?i, ?l)) ^ (obj-loc'(?i2, ?l) ^ DESTINATION_1(?i2, ?l)) ]]"]              
+        },
+        "clean the room kitchen": {
+            "items": ["washingsponge", "soap", "towel"],
+            "locations": ["kitchencounter", "cabinet"],
+            "goal": [],
+            "destination": ["DESTINATION_0(washingsponge, kitchencounter) = true;", "DESTINATION_1(soap, kitchencounter) = true;", "DESTINATION_2(towel, kitchencounter) = true;"],
+            "rewards": ["+ 80 * [sum_{?i: item} exists_{?l: location} (obj-loc'(?i, ?l) ^ (DESTINATION_0(?i, ?l) | DESTINATION_1(?i, ?l) | DESTINATION_2(?i, ?l)) )]"]
+            },
+        "clean the room bathroom": {
+            "items": ["washingsponge", "trash", "towel"],
+            "locations": ["sink", "floor", "garbagecan", "bathroomcounter", "cabinet"],
+            "goal": [],
+            "destination": ["DESTINATION_0(washingsponge, bathroomcounter) = true;", "DESTINATION_1(soap, bathroomcounter) = true;", "DESTINATION_2(towel, bathroomcounter) = true;"],
+            "rewards": ["+ 80 * [sum_{?i: item} exists_{?l: location} (obj-loc'(?i, ?l) ^ (DESTINATION_0(?i, ?l) | DESTINATION_1(?i, ?l) | DESTINATION_2(?i, ?l)) )]"]
+        }
+    }
+}

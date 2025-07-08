@@ -1,0 +1,242 @@
+domain example_domain{
+
+
+
+requirements = {reward-deterministic};
+
+
+types {
+
+loc:object;
+item:object;
+agent:object;
+human:object;
+};
+
+
+pvariables{
+
+// state fluents
+
+agent_loc(agent, loc) : {state-fluent, bool, default=false}; //done
+human_loc(human, loc) : {state-fluent, bool, default=false}; //done
+item_loc(item, loc) : {state-fluent, bool, default=false};
+
+agent_inhand(item, loc) : {state-fluent, bool, default=false}; //done
+human_inhand(item, loc) : {state-fluent, bool, default=false};  //done
+
+obj_break(item) : {state-fluent, bool, default=false};
+cleaned(loc) : {state-fluent, bool, default=false};
+
+
+switch(loc) : {state-fluent, bool, default=false};
+open(loc) : {state-fluent, bool, default=false};
+
+
+
+//action fluents
+
+agent_moves(agent, loc, loc) : {action-fluent, bool, default=false};
+human_moves(human, loc, loc) : {action-fluent, bool, default=false};
+
+agent_picks(agent, item, loc) : {action-fluent, bool, default=false};
+human_picks(human, loc, loc) : {action-fluent, bool, default=false};
+agent_places(agent, item, loc) : {action-fluent, bool, default=false};
+human_places(human, item, loc) : {action-fluent, bool, default=false};
+agent_puts_in(agent, item, item) : {action-fluent, bool, default=false};
+humna_puts_in(human, ite,, item) : {action-fluent, bool, default=false};
+
+agent_cleans(agent, loc) : {action-fluent, bool, default=false};
+human_cleans(human, loc) : {action-fluent, bool, default=false};
+agent_switch_on(agent, loc) : { action-fluent, bool, default = false };
+agent_switch_off(agent, loc) : { action-fluent, bool, default = false };
+human_switch_on(human, loc) : { action-fluent, bool, default = false };
+human_switch_off(human, loc) : { action-fluent, bool, default = false };
+agent_open(agent, loc)	: { action-fluent, bool, default = false };
+agent_close(agent, loc) : { action-fluent, bool, default = false };
+human_open(human, loc)	: { action-fluent, bool, default = false };
+human_close(human, loc) : { action-fluent, bool, default = false };
+
+
+//non fluents
+COST(agent, loc, loc) : { non-fluent, int, default = 0 };
+FRAGILE(item) : { non-fluent, bool, default = false };
+MOP_ITEM(item) : { non-fluent, bool, default = false };
+FOOD_ITEM(item) : { non-fluent, bool, default = false };
+EQUAL(item, item) : { non-fluent, bool, default = false };
+CONTAINER(item) : { non-fluent, bool, default = false };
+APPLIANCE(loc) : { non-fluent, bool, default = false };
+
+GOAL_0(item, item, loc)      : { non-fluent, bool, default = false };
+GOAL_1(item, item, loc)      : { non-fluent, bool, default = false };
+GOAL_2(item, item, loc)      : { non-fluent, bool, default = false };
+DESTINATION_0(item, loc)     : { non-fluent, bool, default = false };
+DESTINATION_1(item, loc)   : { non-fluent, bool, default = false };
+DESTINATION_2(item, loc)   : { non-fluent, bool, default = false };
+
+};
+
+cpfs {
+
+
+human_loc'(?h, ?l) = if (exists_{?from, ?l: loc} [human_moves(?h, ?from, ?l)^human_loc(?h, ?from)])
+                         then Bernoulli(0.8)
+                     else false
+
+agent_loc'(?a, ?l) = if (exists_{?from, ?l: loc} [agent_moves(?a, ?from, ?l)^agent_loc(?a, ?from)])
+                         then true
+                     else false
+
+
+agent_inhand'(?a, ?i) = if (exists_{i : item} [agent_picks(?a, ?i, ?l)^agent_loc(?a,l)])
+                             then true
+                        else false
+
+human_inhand'(?h, ?i) = if (exists_{i : item} [human_picks(?h, ?i, ?l)^human_loc(?h,l)^FRAGILE(?l)])
+                             then Bernoulli(0.1)
+                        else if (exists_{i : item} [human_picks(?h, ?i, ?l)^human_loc(?h,?l)^~FRAGILE(?l)])
+                        else false
+
+item_loc(?i, ?l) = if (exists_{?i : item} [agent_picks(?a, ?i, ?from)^agent_loc((?a, ?l)^agent_places(?a, ?i, ?l)^~agent_inhand(?a, ?i))])
+then true
+else if (exists_{?i : item} [human_picks(?h, ?i, ?from)^human_loc((?h, ?l)^agent_places(?h, ?i, ?l)^~human_inhand(?h, ?i))])
+else false
+};
+
+reward = if (DESTINATION(?i, ?l) ^ item_loc(?i, ?l))
+         then 100
+         else -100;
+
+
+
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+###small_version domain
+
+
+domain example_domain{
+
+
+requirements = {reward-deterministic};
+
+
+types {
+
+loc : object;
+item : object;
+agent : object;
+human : object;
+
+};
+
+
+pvariables{
+
+// state fluents
+
+agent_loc(agent, loc) : {state-fluent, bool, default=false}; //done
+human_loc(human, loc) : {state-fluent, bool, default=false}; //done
+item_loc(item, loc) : {state-fluent, bool, default=false}; //done
+agent_inhand(agent, item) : {state-fluent, bool, default=false}; //done
+human_inhand(human, item) : {state-fluent, bool, default=false};  //done
+
+//action fluents
+
+agent_moves(agent, loc, loc) : {action-fluent, bool, default=false};
+human_moves(human, loc, loc) : {action-fluent, bool, default=false};
+agent_picks(agent, item, loc) : {action-fluent, bool, default=false};
+human_picks(human, loc, loc) : {action-fluent, bool, default=false};
+agent_places(agent, item, loc) : {action-fluent, bool, default=false};
+human_places(human, item, loc) : {action-fluent, bool, default=false};
+
+
+//non fluents
+DESTINATION(item, loc) : { non-fluent, bool, default = false };
+FRAGILE(item) : { non-fluent, bool, default = false };
+
+};
+
+cpfs {
+
+
+human_loc'(?h, ?l) = if (exists_{?from : loc} [human_moves(?h, ?from, ?l)^human_loc(?h, ?from)])
+                         then Bernoulli(0.8)
+                     else false;
+
+
+agent_loc'(?a, ?l) = if (exists_{?from : loc} [agent_moves(?a, ?from, ?l)^agent_loc(?a, ?from)])
+                         then true
+                     else false;
+
+agent_inhand'(?a, ?i) = if (exists_{?i : item} [agent_picks(?a, ?i, ?l)^agent_loc(?a, ?l)])
+                             then true
+                        else false;
+
+human_inhand'(?h, ?i) = if (exists_{?i : item} [human_picks(?h, ?i, ?l)^human_loc(?h,?l)^FRAGILE(?i)])
+                             then Bernoulli(0.1)
+                        else if (exists_{?i : item} [human_picks(?h, ?i, ?l)^human_loc(?h,?l)^~FRAGILE(?i)])
+                              then Bernoulli(0.9)
+                        else false;
+
+item_loc'(?i, ?l) = if (exists_{?i : item} [agent_picks(?a, ?i, ?from)^agent_loc(?a, ?l)^agent_places(?a, ?i, ?l)^~agent_inhand(?a, ?i)])
+                       then true
+                    else if (exists_{?i : item} [human_picks(?h, ?i, ?from)^human_loc(?h, ?l)^human_places(?h, ?i, ?l)^~human_inhand(?h, ?i)])
+                        then true
+                    else false;
+
+
+
+};
+
+reward = if (DESTINATION(?i, ?l) ^ item_loc(?i, ?l))
+         then 100
+         else -100;
+
+
+}
+
+
+
+#### small_version_instance
+
+
+non-fluents example_problem {
+    domain = example_domain;
+
+    // Objects in the domain
+    objects {
+        loc : {fridge, countertop, cabinet};
+        item : {eggs,plate};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+       
+DESTINATION(robot, countertop) = true;
+FRAGILE(plate) = true;
+
+    };
+}
+
+instance example_instance{
+    domain = example_domain;
+    non-fluents = example_problem;
+
+    init-state {
+        agent_loc(robot, cabinet) = true;
+        human_loc(human, cabinet) = true;
+        item_loc(eggs, fridge) = true;
+
+    };
+
+    max-nondef-actions = 1;
+    horizon = 10;
+    discount = 1.0;
+}

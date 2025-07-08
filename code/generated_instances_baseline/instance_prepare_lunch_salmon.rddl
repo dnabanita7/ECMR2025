@@ -1,0 +1,79 @@
+
+non-fluents nf_instance_prepare_lunch_salmon_inst {
+    domain = domain_x_robot_anticipation_prepare_lunch_salmon;
+
+    // Objects in the domain
+    objects {
+        location : {kitchencounter, stove, fridge, microwave, cabinet};
+        item : {plate, mop, plate_1, salmon};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+        COST(robot, kitchencounter, kitchencounter) = 0;
+COST(robot, kitchencounter, stove) = 15;
+COST(robot, kitchencounter, fridge) = 17;
+COST(robot, kitchencounter, microwave) = 19;
+COST(robot, kitchencounter, cabinet) = 14;
+COST(robot, stove, kitchencounter) = 20;
+COST(robot, stove, stove) = 0;
+COST(robot, stove, fridge) = 16;
+COST(robot, stove, microwave) = 14;
+COST(robot, stove, cabinet) = 12;
+COST(robot, fridge, kitchencounter) = 13;
+COST(robot, fridge, stove) = 10;
+COST(robot, fridge, fridge) = 0;
+COST(robot, fridge, microwave) = 15;
+COST(robot, fridge, cabinet) = 17;
+COST(robot, microwave, kitchencounter) = 12;
+COST(robot, microwave, stove) = 20;
+COST(robot, microwave, fridge) = 12;
+COST(robot, microwave, microwave) = 0;
+COST(robot, microwave, cabinet) = 15;
+COST(robot, cabinet, kitchencounter) = 18;
+COST(robot, cabinet, stove) = 15;
+COST(robot, cabinet, fridge) = 15;
+COST(robot, cabinet, microwave) = 16;
+COST(robot, cabinet, cabinet) = 0;
+        FRAGILE(plate) = true;
+FRAGILE(plate_1) = true;
+        FOOD_ITEM(salmon) = true;
+        MOP_ITEM(mop) = true;
+        CONTAINER(plate) = true;
+CONTAINER(plate_1) = true;
+        EQUAL(plate, plate_1) = true;
+        APPLIANCE(fridge) = true;
+APPLIANCE(cabinet) = true;
+APPLIANCE(stove) = true;
+APPLIANCE(microwave) = true;
+        HAS-SWITCH(stove) = true;
+HAS-SWITCH(microwave) = true;
+        GOAL_0(salmon, plate, kitchencounter) = true;
+        DESTINATION_0(salmon, stove) = true;
+DESTINATION_1(salmon, kitchencounter) = true;
+DESTINATION_2(plate, kitchencounter) = true;
+
+    };
+}
+
+instance instance_prepare_lunch_salmon {
+    domain = domain_x_robot_anticipation_prepare_lunch_salmon;
+    non-fluents = nf_instance_prepare_lunch_salmon_inst;
+
+    init-state {
+        agent-loc(robot, kitchencounter) = true;
+        human-loc(human, cabinet) = true;
+
+        obj-loc(mop, cabinet) = true;
+
+        obj-loc(plate, kitchencounter) = true;
+obj-loc(plate_1, kitchencounter) = true;
+obj-loc(salmon, kitchencounter) = true;
+    };
+
+    max-nondef-actions = 1;
+    horizon = 35;
+    discount = 1.0;
+}
+    

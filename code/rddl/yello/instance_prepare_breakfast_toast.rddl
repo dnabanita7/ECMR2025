@@ -1,0 +1,81 @@
+
+non-fluents nf_instance_prepare_breakfast_toast_inst {
+    domain = domain_x_robot_anticipation;
+
+    // Objects in the domain
+    objects {
+        location : {countertop, stove, toaster, fridge, cabinet};
+        item : {plate_1, breadslice, broom, plate, mop};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+        COST(robot, countertop, countertop) = 0;
+COST(robot, countertop, stove) = 11;
+COST(robot, countertop, toaster) = 10;
+COST(robot, countertop, fridge) = 12;
+COST(robot, countertop, cabinet) = 13;
+COST(robot, stove, countertop) = 15;
+COST(robot, stove, stove) = 0;
+COST(robot, stove, toaster) = 17;
+COST(robot, stove, fridge) = 18;
+COST(robot, stove, cabinet) = 10;
+COST(robot, toaster, countertop) = 14;
+COST(robot, toaster, stove) = 10;
+COST(robot, toaster, toaster) = 0;
+COST(robot, toaster, fridge) = 15;
+COST(robot, toaster, cabinet) = 16;
+COST(robot, fridge, countertop) = 18;
+COST(robot, fridge, stove) = 15;
+COST(robot, fridge, toaster) = 17;
+COST(robot, fridge, fridge) = 0;
+COST(robot, fridge, cabinet) = 16;
+COST(robot, cabinet, countertop) = 10;
+COST(robot, cabinet, stove) = 16;
+COST(robot, cabinet, toaster) = 10;
+COST(robot, cabinet, fridge) = 20;
+COST(robot, cabinet, cabinet) = 0;
+        FRAGILE(plate_1) = true;
+FRAGILE(plate) = true;
+        
+MOP_ITEM(mop) = true;
+MOP_ITEM(broom) = true;
+CONTAINER(plate_1) = true;
+CONTAINER(plate) = true;
+EQUAL(plate, plate_1) = true;
+APPLIANCE(stove) = true;
+APPLIANCE(fridge) = true;
+APPLIANCE(toaster) = true;
+
+//GOAL_0(breadslice, plate, countertop) = true;
+GOAL_0(breadslice, plate, countertop) = true;
+//DESTINATION_0(breadslice, toaster) = true;
+//DESTINATION_1(breadslice, countertop) = true;
+//DESTINATION_2(plate, countertop) = true;
+
+    };
+}
+
+instance instance_prepare_breakfast_toast {
+    domain = domain_x_robot_anticipation;
+    non-fluents = nf_instance_prepare_breakfast_toast_inst;
+
+    init-state {
+        agent-loc(robot, countertop) = true;
+        human-loc(human, cabinet) = true;
+
+        obj-loc(mop, cabinet) = true;
+        obj-loc(broom, cabinet) = true;
+
+        
+obj-loc(plate_1, countertop) = true;
+obj-loc(breadslice, countertop) = true;
+obj-loc(plate, countertop) = true;
+    };
+
+    max-nondef-actions = 2;
+    horizon = 20;
+    discount = 1.0;
+}
+    

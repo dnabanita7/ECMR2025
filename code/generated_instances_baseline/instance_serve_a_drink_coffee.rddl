@@ -1,0 +1,85 @@
+
+non-fluents nf_instance_serve_a_drink_coffee_inst {
+    domain = domain_x_robot_anticipation_serve_a_drink_coffee;
+
+    // Objects in the domain
+    objects {
+        location : {cabinet, coffeemaker, coffeetable, stove, faucet};
+        item : {glass, water, broom, glass_1, pan, coffee};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+        COST(robot, cabinet, cabinet) = 0;
+COST(robot, cabinet, coffeemaker) = 15;
+COST(robot, cabinet, coffeetable) = 11;
+COST(robot, cabinet, stove) = 16;
+COST(robot, cabinet, faucet) = 12;
+COST(robot, coffeemaker, cabinet) = 10;
+COST(robot, coffeemaker, coffeemaker) = 0;
+COST(robot, coffeemaker, coffeetable) = 13;
+COST(robot, coffeemaker, stove) = 15;
+COST(robot, coffeemaker, faucet) = 10;
+COST(robot, coffeetable, cabinet) = 13;
+COST(robot, coffeetable, coffeemaker) = 15;
+COST(robot, coffeetable, coffeetable) = 0;
+COST(robot, coffeetable, stove) = 10;
+COST(robot, coffeetable, faucet) = 19;
+COST(robot, stove, cabinet) = 10;
+COST(robot, stove, coffeemaker) = 16;
+COST(robot, stove, coffeetable) = 13;
+COST(robot, stove, stove) = 0;
+COST(robot, stove, faucet) = 10;
+COST(robot, faucet, cabinet) = 18;
+COST(robot, faucet, coffeemaker) = 18;
+COST(robot, faucet, coffeetable) = 11;
+COST(robot, faucet, stove) = 19;
+COST(robot, faucet, faucet) = 0;
+        FRAGILE(glass) = true;
+FRAGILE(glass_1) = true;
+        FOOD_ITEM(coffee) = true;
+FOOD_ITEM(water) = true;
+        MOP_ITEM(broom) = true;
+        CONTAINER(glass) = true;
+CONTAINER(glass_1) = true;
+CONTAINER(pan) = true;
+        EQUAL(glass, glass_1) = true;
+        APPLIANCE(faucet) = true;
+APPLIANCE(coffeemaker) = true;
+APPLIANCE(cabinet) = true;
+APPLIANCE(stove) = true;
+        HAS-SWITCH(faucet) = true;
+HAS-SWITCH(coffeemaker) = true;
+HAS-SWITCH(stove) = true;
+        GOAL_0(coffee, glass, coffeemaker) = true;
+GOAL_1(coffee, glass, coffeetable) = true;
+        DESTINATION_0(coffee, coffeemaker) = true;
+DESTINATION_1(water, coffeemaker) = true;
+DESTINATION_2(glass, coffeetable) = true;
+
+    };
+}
+
+instance instance_serve_a_drink_coffee {
+    domain = domain_x_robot_anticipation_serve_a_drink_coffee;
+    non-fluents = nf_instance_serve_a_drink_coffee_inst;
+
+    init-state {
+        agent-loc(robot, cabinet) = true;
+        human-loc(human, faucet) = true;
+
+        obj-loc(broom, cabinet) = true;
+
+        obj-loc(water, faucet) = true;
+obj-loc(glass, cabinet) = true;
+obj-loc(glass_1, cabinet) = true;
+obj-loc(pan, cabinet) = true;
+obj-loc(coffee, cabinet) = true;
+    };
+
+    max-nondef-actions = 1;
+    horizon = 35;
+    discount = 1.0;
+}
+    

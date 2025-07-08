@@ -1,0 +1,296 @@
+domain domain_x_robot_anticipation_serve_a_drink_coffee {
+
+    types {
+        location : object;
+        item : object;
+        agent : object;
+        human: object;
+    };
+
+    pvariables {
+
+        agent-loc(agent, location)			: { state-fluent, bool, default = false };
+        human-loc(human, location)			: { state-fluent, bool, default = false };
+        
+        obj-loc(item, location)  : { state-fluent, bool, default = false };
+        inhand(agent, item)      : { state-fluent, bool, default = false };
+        inhand-human(human, item)      : { state-fluent, bool, default = false };
+        obj-break(item)          : { state-fluent, bool, default = false };
+        cleaned(location)        : { state-fluent, bool, default = true };
+        food-in(item, item)					: { state-fluent, bool, default = false };
+		
+        switch_appliance(location)			: { state-fluent, bool, default = false };
+        open(location)                      : { state-fluent, bool, default = false };
+
+
+        move(agent, location, location) : { action-fluent, bool, default = false };
+        move_human(human, location, location) : { action-fluent, bool, default = false };
+        pick(agent, item, location)     : { action-fluent, bool, default = false };
+        pick_human(human, item, location)     : { action-fluent, bool, default = false };
+        place(agent, item, location)    : { action-fluent, bool, default = false };
+        place_human(human, item, location)    : { action-fluent, bool, default = false };
+        clean(agent, location)          : { action-fluent, bool, default = false };
+        clean_human(human, location)          : { action-fluent, bool, default = false };
+        put_in(agent, item, item)			: { action-fluent, bool, default = false };
+        put_in_human(human, item, item)			: { action-fluent, bool, default = false };
+
+        agent_switch_on(agent, location)			: { action-fluent, bool, default = false };
+	    agent_switch_off(agent, location)		: { action-fluent, bool, default = false };
+        human_switch_on(human, location)			: { action-fluent, bool, default = false };
+	    human_switch_off(human, location)		: { action-fluent, bool, default = false };
+
+        agent_open(agent, location)			: { action-fluent, bool, default = false };
+	    agent_close(agent, location)		: { action-fluent, bool, default = false };
+        human_open(human, location)			: { action-fluent, bool, default = false };
+	    human_close(human, location)		: { action-fluent, bool, default = false };
+
+        COST(agent, location, location) : { non-fluent, int, default = 0 };
+        FRAGILE(item)                   : { non-fluent, bool, default = false };
+        MOP_ITEM(item)                  : { non-fluent, bool, default = false };
+        FOOD_ITEM(item)                 : { non-fluent, bool, default = false };
+        EQUAL(item, item)               : { non-fluent, bool, default = false };
+        CONTAINER(item)                 : { non-fluent, bool, default = false };
+        HAS-SWITCH(location)            : {non-fluent, bool, default=false};
+
+        APPLIANCE(location)                 : { non-fluent, bool, default = false };
+
+    
+    DESTINATION_0(item, location) : { non-fluent, bool, default = false };
+    DESTINATION_1(item, location) : { non-fluent, bool, default = false };
+    DESTINATION_2(item, location) : { non-fluent, bool, default = false };
+    GOAL_0(item, item, location) : { non-fluent, bool, default = false };
+    GOAL_1(item, item, location) : { non-fluent, bool, default = false };
+};
+
+    cpfs {
+
+
+
+            human-loc'(?h, ?l) =
+                if (exists_{?from: location} (move_human(?h, ?from, ?l) ^ human-loc(?h, ?from)))
+                    then Bernoulli(0.8)
+                else if (exists_{?to: location} (move_human(?h, ?l, ?to) ^ human-loc(?h, ?l)))
+                    then Bernoulli(0.2)  
+                else 
+                    human-loc(?h, ?l);
+
+        
+    
+    
+            inhand'(?a, ?i) =
+                if (exists_{?h:human} (inhand-human(?h, ?i)))
+                    then false
+                else if ( exists_{?l : location}( pick(?a, ?i, ?l) ^ agent-loc(?a, ?l) ))
+                    then true
+                else if(exists_{?l : location}(place(?a, ?i, ?l) ))
+                    then false
+                else if(exists_{?l : location, ?f : item}(put_in(?a, ?f, ?i) ^ FOOD_ITEM(?f) ^ CONTAINER(?i) ))
+                    then false
+                else
+                    inhand(?a, ?i);
+
+
+            inhand-human'(?h, ?i) =
+ 
+    if (exists_{?a: agent} (inhand(?a, ?i)))
+        then false
+
+
+    else if (exists_{?l: location} (
+        pick_human(?h, ?i, ?l) ^
+        human-loc(?h, ?l) ^ 
+        obj-loc(?i, ?l) ^ 
+        ~inhand-human(?h, ?i)  
+    ))
+        then
+            if (FRAGILE(?i))
+                then Bernoulli(0.1)
+                else Bernoulli(0.9)
+
+
+    else if (exists_{?l: location} (
+         place_human(?h, ?i, ?l) ^
+         human-loc(?h, ?l)
+    ))
+        then false
+    else if (exists_{?l: location, ?f: item} (
+        put_in_human(?h, ?f, ?i) ^
+        FOOD_ITEM(?f) ^ CONTAINER(?i) ^
+        inhand-human(?h, ?f)
+    ))
+        then false
+
+    else
+        inhand-human(?h, ?i);
+
+
+
+    
+            obj-break'(?i) = 
+                if(exists_{?h : human, ?l : location} ((pick_human(?h, ?i, ?l) ) ^ FRAGILE(?i)))
+                    then Bernoulli(0.9)
+                else if(exists_{?h : human, ?l : location, ?f : item} ((place_human(?h, ?i, ?l) | inhand-human(?h, ?i)) | (FOOD_ITEM(?f) ^ CONTAINER(?i) ^ put_in_human(?h, ?f, ?i) | inhand-human(?h, ?i)) ^ FRAGILE(?i) ))
+                    then Bernoulli(0.9)
+                else if(exists_{?a: agent, ?l : location} (pick(?a, ?i, ?l)))
+                    then false
+                else if(exists_{?a : agent, ?l : location} (place(?a, ?i, ?l) | inhand(?a, ?i)))
+                    then false
+                else if(exists_{?a : agent, ?l : location, ?f :  item} (put_in(?a, ?f, ?i) ^ FOOD_ITEM(?f) ^ CONTAINER(?i) | inhand(?a, ?i)))
+                    then false
+                else if (exists_{?h: human, ?l : location} (pick_human(?h, ?i, ?l) ^ ~FRAGILE(?i)))
+                    then Bernoulli(0.1)
+                else if(exists_{?h : human, ?l : location, ?f: item} ((place_human(?h, ?i, ?l) | inhand-human(?h, ?i)) | (FOOD_ITEM(?f) ^ CONTAINER(?i) ^ put_in_human(?h, ?f, ?i) | inhand-human(?h, ?i))  ^ ~FRAGILE(?i) ))
+                    then Bernoulli(0.1)
+                else
+                    false;
+    
+            food-in'(?f, ?i) = 
+                if (exists_{?a : agent} (FOOD_ITEM(?f) ^ CONTAINER(?i) ^ put_in(?a, ?f, ?i) ^ inhand(?a, ?f) ))
+                    then true
+                else if (exists_{?h : human} (FOOD_ITEM(?f) ^ CONTAINER(?i) ^ put_in_human(?h, ?f, ?i) ^ inhand-human(?h, ?f) ))
+                    then true
+                else
+                    food-in(?f, ?i);
+
+            agent-loc'(?a, ?l) = 
+                if (exists_{?from : location} (move(?a, ?from, ?l) ^ agent-loc(?a, ?from)))
+                    then true
+                
+                else if (exists_{?to : location} (move(?a, ?l, ?to) ^ agent-loc(?a, ?l)))
+                    then false
+                    
+                else 
+                    agent-loc(?a, ?l);
+    
+            obj-loc'(?i, ?l) = 
+                if (exists_{?a : agent} (pick(?a, ?i, ?l)))
+                    then false
+                else if (exists_{?h : human} (pick_human(?h, ?i, ?l) ))
+                    then false
+                else if (exists_{?a : agent} (place(?a, ?i, ?l)))
+                    then true
+                else if (exists_{?a : agent, ?f: item} (put_in(?a, ?f, ?i) ^ FOOD_ITEM(?f) ^ CONTAINER(?i) ^ agent-loc(?a, ?l)))
+                    then true  
+                else if (exists_{?a: agent} (inhand(?a, ?i)))
+                    then false
+                else if (exists_{?h : human} (place_human(?h, ?i, ?l)))
+                    then true
+                else if (exists_{?h : human, ?f: item} (put_in_human(?h, ?f, ?i) ^ FOOD_ITEM(?f) ^ CONTAINER(?i) ^ human-loc(?h, ?l)))
+                    then true  
+                else if (exists_{?h : human} (inhand-human(?h, ?i)))
+                    then false
+                else obj-loc(?i, ?l);
+                
+    
+    
+            
+    
+            
+    
+            cleaned'(?l) = 
+                if (exists_{?i : item, ?a: agent} (obj-break(?i) ^ obj-loc(?i, ?l) ^ agent-loc(?a, ?l) ^ ~exists_{?m: item} (MOP_ITEM(?m) ^ obj-loc(?m, ?l) ^ agent-loc(?a, ?l))))
+                    then false
+    
+                else if (exists_{?i : item, ?h: human} (obj-break(?i) ^ obj-loc(?i, ?l) ^ human-loc(?h, ?l) ^ ~exists_{?m: item} (MOP_ITEM(?m) ^ obj-loc(?m, ?l) ^ human-loc(?h, ?l))))
+                    then false
+    
+                else if (exists_{?a : agent, ?i : item} (clean(?a, ?l) ^ agent-loc(?a, ?l) ^ obj-loc(?i, ?l) ^ MOP_ITEM(?i)))
+                    then true
+    
+                else if (exists_{?h : human, ?i : item} (clean_human(?h, ?l) ^ human-loc(?h, ?l) ^ obj-loc(?i, ?l) ^ MOP_ITEM(?i)))
+                    then true
+    
+                else
+                    cleaned(?l);
+
+
+
+       switch_appliance'(?l) = 
+    if (HAS-SWITCH(?l) ^ exists_{?a: agent} (
+        agent_switch_on(?a, ?l) ^ APPLIANCE(?l) ^ exists_{?i: item} (obj-loc(?i, ?l))
+    ))
+        then true
+
+    else if (HAS-SWITCH(?l) ^ exists_{?a: agent} (
+        agent_switch_off(?a, ?l) ^ APPLIANCE(?l)
+    ))
+        then false
+
+    else if (HAS-SWITCH(?l) ^ exists_{?h: human} (
+        human_switch_on(?h, ?l) ^ APPLIANCE(?l) ^ exists_{?i: item} (obj-loc(?i, ?l))
+    ))
+        then Bernoulli(0.9)
+
+    else if (HAS-SWITCH(?l) ^ exists_{?h: human} (
+        human_switch_off(?h, ?l) ^ APPLIANCE(?l)
+    ))
+        then Bernoulli(0.1)
+
+    else
+        switch_appliance(?l);
+
+
+
+		
+        open'(?obj) = 
+    if (exists_{?a: agent} (agent_open(?a, ?obj) ^ APPLIANCE(?obj) ^ agent-loc(?a, ?obj)))
+        then true
+    else if (exists_{?a: agent} (agent_close(?a, ?obj) ^ APPLIANCE(?obj) ^ exists_{?i: item} (obj-loc(?i, ?obj))))
+        then false
+    else if (exists_{?h: human} (human_open(?h, ?obj) ^ APPLIANCE(?obj) ^ human-loc(?h, ?obj) ^ ~human_open(?h, ?obj)))
+        then Bernoulli(0.8)
+    else if (exists_{?h: human} (human_close(?h, ?obj) ^ APPLIANCE(?obj) ^ human-loc(?h, ?obj) ^ exists_{?i: item} (obj-loc(?i, ?obj))))
+        then Bernoulli(0.2)
+    else
+        open(?obj);
+
+        
+    };
+
+reward = + 0 * [ sum_{?i: item} ( FRAGILE(?i) ^ obj-break(?i) ) ] + 20 * [ sum_{?a: agent, ?f: item, ?l: location}( pick(?a, ?f, ?l) ^ FOOD_ITEM(?f) )] + 50 * [ sum_{?a: agent, ?f: item, ?l: location} ( place(?a, ?f, ?l) ^ FOOD_ITEM(?f) ^ DESTINATION_0(?f, ?l) )] + 50 * [ sum_{?a: agent, ?w: item, ?l: location} ( place(?a, ?w, ?l) ^ FOOD_ITEM(?w) ^ DESTINATION_1(?w, ?l) )] + 50 * [ sum_{?a: agent, ?p: item, ?l: location} ( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_2(?p, ?l) )] + 50 * [ sum_{?a: agent, ?p: item, ?l: location} ( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_0(?p, ?l) )] + 50 * [ sum_{?a: agent, ?p: item, ?l: location} ( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_1(?p, ?l) )] + 60 * [ sum_{?a: agent, ?f: item, ?p:item} ( put_in(?a, ?f, ?p) ^ FOOD_ITEM(?f) ^ CONTAINER(?p) )] + 60 * [ sum_{?a: agent, ?w: item, ?p: item} ( put_in(?a, ?w, ?p) ^ FOOD_ITEM(?w) ^ CONTAINER(?p) )] + 50 * [ sum_{?a: agent, ?p: item, ?l: location} ( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_0(?p, ?l) )] + 5 * [ sum_{?a: agent, ?l: location}( agent_open(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )] + 5 * [ sum_{?a: agent, ?l: location}( agent_close(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )] + 5 * [ sum_{?a: agent, ?l: location}( agent_switch_on(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )] + 5 * [ sum_{?a: agent, ?l: location}( agent_switch_off(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )] + 80 * [ sum_{?a: agent, ?f: item, ?p: item, ?l: location} ( pick(?a, ?f, ?l) ^ FOOD_ITEM(?f) ^ food-in(?f, ?p) ^ CONTAINER(?p) )] + 150 * [ sum_{?f: item, ?p: item, ?l: location} ( FOOD_ITEM(?f) ^ CONTAINER(?p) ^ food-in(?f, ?p) ^ GOAL_0(?f, ?p, ?l) )] + 150 * [ sum_{?f: item, ?p: item, ?l: location} ( FOOD_ITEM(?f) ^ CONTAINER(?p) ^ food-in(?f, ?p) ^ GOAL_1(?f, ?p, ?l) )];
+
+
+
+
+    action-preconditions {
+
+
+        forall_{?a: agent, ?i : item, ?l : location, ?h: human} [pick(?a, ?i, ?l) => agent-loc(?a, ?l) ^ obj-loc(?i, ?l) ^ ~obj-break(?i) ^ ~inhand-human(?h, ?i)];
+        forall_{?a: agent, ?l1 : location, ?l2 : location} [move(?a, ?l1, ?l2) => ~agent-loc(?a, ?l2) ^ agent-loc(?a, ?l1)];
+		forall_{?a: agent, ?i : item, ?l : location} [place(?a, ?i, ?l) => agent-loc(?a, ?l) ^ ~obj-loc(?i, ?l) ^ inhand(?a, ?i) ^ pick(?a, ?i, ?l)];
+        
+        forall_{?a: agent, ?l : location} [clean(?a, ?l) => agent-loc(?a, ?l) ^ exists_{?m: item} (inhand(?a, ?m) ^ MOP_ITEM(?m)) ];
+
+
+        forall_{?a: agent, ?h: human, ?i : item, ?l : location} [pick_human(?h, ?i, ?l) => human-loc(?h, ?l) ^ obj-loc(?i, ?l) ^ ~obj-break(?i) ^ ~inhand(?a, ?i)];
+        forall_{?h: human, ?l1 : location, ?l2 : location} [move_human(?h, ?l1, ?l2) => ~human-loc(?h, ?l2) ^ human-loc(?h, ?l1)];
+        forall_{?h: human, ?i : item, ?l : location} [place_human(?h, ?i, ?l) => human-loc(?h, ?l) ^ ~obj-loc(?i, ?l) ^ inhand-human(?h, ?i)];
+	
+        forall_{?a: agent, ?app: location} [agent_switch_on(?a, ?app) => APPLIANCE(?app) ^ HAS-SWITCH(?app) ^ ~switch_appliance(?app) ^ agent-loc(?a, ?app)];
+
+        forall_{?a: agent, ?app: location} [agent_switch_off(?a, ?app) => APPLIANCE(?app) ^ HAS-SWITCH(?app) ^ switch_appliance(?app) ^ agent-loc(?a, ?app)];
+
+        forall_{?h: human, ?app: location} [human_switch_on(?h, ?app) => APPLIANCE(?app) ^ HAS-SWITCH(?app) ^ ~switch_appliance(?app) ^ human-loc(?h, ?app)];
+
+        forall_{?h: human, ?app: location} [human_switch_off(?h, ?app) => APPLIANCE(?app) ^ HAS-SWITCH(?app) ^ switch_appliance(?app) ^ human-loc(?h, ?app)];
+
+
+        forall_{?a: agent, ?app: location} [agent_open(?a, ?app) => APPLIANCE(?app) ^ ~open(?app) ^ agent-loc(?a, ?app)];
+
+        forall_{?a: agent, ?app: location} [agent_close(?a, ?app) => APPLIANCE(?app) ^ open(?app) ^ agent-loc(?a, ?app)] ;
+
+        forall_{?h: human, ?app: location} [human_open(?h, ?app) => APPLIANCE(?app) ^ ~open(?app) ^ human-loc(?h, ?app)];
+
+        forall_{?h: human, ?app: location} [human_close(?h, ?app) => APPLIANCE(?app) ^ open(?app) ^ human-loc(?h, ?app)];
+
+        forall_{?h: human, ?i: item, ?l: location} [pick_human(?h, ?i, ?l) => human-loc(?h, ?l)];
+        forall_{?h: human, ?i: item, ?l: location} [place_human(?h, ?i, ?l) => human-loc(?h, ?l) ^ inhand-human(?h, ?i)];
+ 
+        forall_{?h: human, ?l1: location, ?l2: location} [move_human(?h, ?l1, ?l2) => human-loc(?h, ?l1) ^ ~human-loc(?h, ?l2)];
+
+        forall_{?a: agent, ?f: item, ?i: item} [put_in(?a, ?f, ?i) => ~food-in(?f, ?i) ^ FOOD_ITEM(?f) ^ CONTAINER(?i) ^ [exists_{?l: location}(obj-loc(?i, ?l) ^ agent-loc(?a, ?l))] ^ inhand(?a, ?f) ^ ~obj-break(?i)];
+
+        forall_{?a: human, ?f: item, ?i: item} [put_in_human(?a, ?f, ?i) => ~food-in(?f, ?i) ^ FOOD_ITEM(?f) ^ CONTAINER(?i) ^ [exists_{?l: location}(obj-loc(?i, ?l) ^ human-loc(?a, ?l))] ^ inhand-human(?a, ?f) ^ ~obj-break(?i) ];
+
+    };
+}

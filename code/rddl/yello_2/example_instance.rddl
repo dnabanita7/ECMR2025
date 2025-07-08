@@ -1,0 +1,32 @@
+
+non-fluents example_problem {
+    domain = example_domain;
+
+    // Objects in the domain
+    objects {
+        loc : {fridge, countertop, cabinet, sink};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+       
+DESTINATION_0(robot, countertop) = true;
+DESTINATION_1(human, countertop) = true;
+
+    };
+}
+
+instance example_instance{
+    domain = example_domain;
+    non-fluents = example_problem;
+
+    init-state {
+        agent_loc(robot, fridge) = true;
+        human_loc(human, fridge) = true;
+    };
+
+    max-nondef-actions = 1;
+    horizon = 20;
+    discount = 1.0;
+}

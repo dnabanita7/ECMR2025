@@ -1,0 +1,55 @@
+
+non-fluents nf_instance_do_the_laundry_inst {
+    domain = domain_x_robot_anticipation_do_the_laundry;
+
+    // Objects in the domain
+    objects {
+        location : {closet, washingmachine, cabinet};
+        item : {mop, detergent, clothesshirt};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+        COST(robot, closet, closet) = 0;
+COST(robot, closet, washingmachine) = 10;
+COST(robot, closet, cabinet) = 11;
+COST(robot, washingmachine, closet) = 20;
+COST(robot, washingmachine, washingmachine) = 0;
+COST(robot, washingmachine, cabinet) = 10;
+COST(robot, cabinet, closet) = 10;
+COST(robot, cabinet, washingmachine) = 14;
+COST(robot, cabinet, cabinet) = 0;
+        
+        
+        MOP_ITEM(mop) = true;
+        
+        
+        APPLIANCE(cabinet) = true;
+        
+        
+        DESTINATION_0(clothesshirt, washingmachine) = true;
+DESTINATION_1(detergent, washingmachine) = true;
+
+    };
+}
+
+instance instance_do_the_laundry {
+    domain = domain_x_robot_anticipation_do_the_laundry;
+    non-fluents = nf_instance_do_the_laundry_inst;
+
+    init-state {
+        agent-loc(robot, closet) = true;
+        human-loc(human, cabinet) = true;
+
+        obj-loc(mop, cabinet) = true;
+
+        obj-loc(clothesshirt, closet) = true;
+obj-loc(detergent, cabinet) = true;
+    };
+
+    max-nondef-actions = 1;
+    horizon = 35;
+    discount = 1.0;
+}
+    

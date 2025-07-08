@@ -1,0 +1,154 @@
+
+non-fluents nf_household_inst {
+    domain = household_v1;
+
+    // Objects in the domain
+    objects {
+        location : {table, floor, shelf, cooktop, sink};
+        item : {broom, mop};
+        food : {apple, cereal, bread, salmon, water_1, water_2, bread_2, cereal_2};
+        receptacle: {plate_1, plate_2, glass_1, glass_2, dishbowl};
+        appliance: {stove, toaster};
+        agent : {human, robot};
+    };
+
+    non-fluents {
+        COST(robot, table, table) = 0;
+        COST(robot, table, floor) = 20;
+        COST(robot, table, shelf) = 20;
+        COST(robot, table, cooktop) = 20;
+        COST(robot, table, sink) = 20;
+
+        COST(robot, floor, floor) = 0;
+        COST(robot, floor, table) = 20;
+        COST(robot, floor, shelf) = 20;
+        COST(robot, floor, cooktop) = 20;
+        COST(robot, floor, sink) = 20;
+
+        COST(robot, shelf, shelf) = 0;
+        COST(robot, shelf, table) = 20;
+        COST(robot, shelf, floor) = 20;
+        COST(robot, shelf, cooktop) = 20;
+        COST(robot, shelf, sink) = 20;
+
+        COST(robot, cooktop, cooktop) = 0;
+        COST(robot, cooktop, table) = 20;
+        COST(robot, cooktop, floor) = 20;
+        COST(robot, cooktop, shelf) = 20;
+        COST(robot, cooktop, sink) = 20;
+
+        COST(robot, sink, sink) = 0;
+        COST(robot, sink, table) = 20;
+        COST(robot, sink, floor) = 20;
+        COST(robot, sink, shelf) = 20;
+        COST(robot, sink, cooktop) = 20;
+
+        COST(human, table, table) = 0;
+        COST(human, table, floor) = 10;
+        COST(human, table, shelf) = 10;
+        COST(human, table, cooktop) = 10;
+        COST(human, table, sink) = 10;
+
+        COST(human, floor, floor) = 0;
+        COST(human, floor, table) = 10;
+        COST(human, floor, shelf) = 10;
+        COST(human, floor, cooktop) = 10;
+        COST(human, floor, sink) = 10;
+
+        COST(human, shelf, shelf) = 0;
+        COST(human, shelf, table) = 10;
+        COST(human, shelf, floor) = 10;
+        COST(human, shelf, cooktop) = 10;
+        COST(human, shelf, sink) = 10;
+
+        COST(human, cooktop, cooktop) = 0;
+        COST(human, cooktop, table) = 10;
+        COST(human, cooktop, floor) = 10;
+        COST(human, cooktop, shelf) = 10;
+        COST(human, cooktop, sink) = 10;
+
+        COST(human, sink, sink) = 0;
+        COST(human, sink, table) = 10;
+        COST(human, sink, floor) = 10;
+        COST(human, sink, shelf) = 10;
+        COST(human, sink, cooktop) = 10;
+
+        FRAGILE(plate_1) = true;
+        FRAGILE(plate_2) = true;
+        FRAGILE(glass_1) = true;
+        FRAGILE(glass_2) = true;
+
+        FOOD_ITEM(apple) = true;
+        FOOD_ITEM(cereal) = true;
+        FOOD_ITEM(bread) = true;
+        FOOD_ITEM(salmon) = true;
+        FOOD_ITEM(water_1) = true;
+        FOOD_ITEM(water_2) = true;
+        FOOD_ITEM(bread_2) = true;
+        FOOD_ITEM(cereal_2) = true;
+
+        EQUAL(plate_1, plate_2) = true;
+        EQUAL(glass_1, glass_2) = true;
+
+        CONTAINER (plate_1) = true;  
+        CONTAINER (plate_2) = true;  
+        CONTAINER (glass_1) = true;  
+        CONTAINER (glass_2) = true;  
+        CONTAINER (dishbowl) = true;  
+        CONTAINER (stove) = true;  
+        CONTAINER (toaster) = true;
+
+        MOP_ITEM(mop) = true;
+        BROOM_ITEM(broom) = true;
+        STOVE_ITEM(stove) = true;
+        TOASTER_ITEM(toaster) = true;
+
+        DESTINATION_2(plate_1, table) = true;
+        DESTINATION(apple, table) = true;
+        GOAL(apple, plate_1, table) = true;
+
+        //DESTINATION_2(dishbowl, table) = true;
+        //DESTINATION(cereal, table) = true;
+        //GOAL(cereal, dishbowl, table) = true;
+        //GOAL(salmon, stove, cooktop) = true;
+        //GOAL(bread, toaster, cooktop) = true;
+        //DESTINATION(water_1, table) = true;
+    };
+}
+
+instance household_inst {
+    domain = household_v1;
+    non-fluents = nf_household_inst;
+
+    // Initial state definition
+    init-state {
+        agent-loc(robot, table) = true;
+        agent-loc(human, table) = true;
+
+        obj-loc(mop, floor) = true;
+        obj-loc(broom, floor) = true;
+
+        obj-loc(apple, cooktop) = true;
+        obj-loc(cereal, cooktop) = true;
+        obj-loc(bread, cooktop) = true;
+        obj-loc(salmon, cooktop) = true;
+        obj-loc(water_1, shelf) = true;
+        obj-loc(water_2, shelf) = true;
+        obj-loc(bread_2, cooktop) = true;
+        obj-loc(cereal_2, cooktop) = true;
+
+        //obj-loc(stove, cooktop) = true;
+        //obj-loc(toaster, cooktop) = true;
+
+        obj-loc(plate_1, shelf) = true;
+        obj-loc(plate_2, shelf) = true;
+        obj-loc(glass_1, shelf) = true;
+        obj-loc(glass_2, shelf) = true;
+        obj-loc(dishbowl, shelf) = true;
+    };
+
+    // Instance settings
+    max-nondef-actions = 1;
+    horizon = 25;
+    discount = 0.8;
+}

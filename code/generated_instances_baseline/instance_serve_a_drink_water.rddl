@@ -1,0 +1,62 @@
+
+non-fluents nf_instance_serve_a_drink_water_inst {
+    domain = domain_x_robot_anticipation_serve_a_drink_water;
+
+    // Objects in the domain
+    objects {
+        location : {coffeetable, kitchencounter, cabinet, faucet};
+        item : {water, broom, waterglass};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+        COST(robot, coffeetable, coffeetable) = 0;
+COST(robot, coffeetable, kitchencounter) = 13;
+COST(robot, coffeetable, cabinet) = 15;
+COST(robot, coffeetable, faucet) = 15;
+COST(robot, kitchencounter, coffeetable) = 16;
+COST(robot, kitchencounter, kitchencounter) = 0;
+COST(robot, kitchencounter, cabinet) = 12;
+COST(robot, kitchencounter, faucet) = 15;
+COST(robot, cabinet, coffeetable) = 12;
+COST(robot, cabinet, kitchencounter) = 19;
+COST(robot, cabinet, cabinet) = 0;
+COST(robot, cabinet, faucet) = 15;
+COST(robot, faucet, coffeetable) = 17;
+COST(robot, faucet, kitchencounter) = 15;
+COST(robot, faucet, cabinet) = 17;
+COST(robot, faucet, faucet) = 0;
+        FRAGILE(waterglass) = true;
+        FOOD_ITEM(water) = true;
+        MOP_ITEM(broom) = true;
+        CONTAINER(waterglass) = true;
+        
+        APPLIANCE(faucet) = true;
+APPLIANCE(cabinet) = true;
+        HAS-SWITCH(faucet) = true;
+        
+        DESTINATION_0(waterglass, coffeetable) = true;
+
+    };
+}
+
+instance instance_serve_a_drink_water {
+    domain = domain_x_robot_anticipation_serve_a_drink_water;
+    non-fluents = nf_instance_serve_a_drink_water_inst;
+
+    init-state {
+        agent-loc(robot, coffeetable) = true;
+        human-loc(human, faucet) = true;
+
+        obj-loc(broom, cabinet) = true;
+
+        obj-loc(water, faucet) = true;
+obj-loc(waterglass, kitchencounter) = true;
+    };
+
+    max-nondef-actions = 1;
+    horizon = 35;
+    discount = 1.0;
+}
+    

@@ -1,0 +1,154 @@
+domain household_v1 {
+
+	types {
+        location : object;
+        item : object;
+        agent : object;
+
+		food : item;
+        receptacle : item;
+		appliance : item;
+
+		interm_level : { @level0, @level1 };
+	};
+
+    pvariables {
+
+		// State fluents
+		manipulation						: { state-fluent, bool, default = false}; // probability of success of manipulation task
+
+		obj-break(item)						: { state-fluent, bool, default = false }; // item status
+		obj-loc(item, location)     		: { state-fluent, bool, default = false }; // item at location
+		food-in(item, item)					: { state-fluent, bool, default = false }; // item in receptacle or appliance
+
+		agent-loc(agent, location)			: { state-fluent, bool, default = false }; // agent at location
+		inhand(agent, item)					: { state-fluent, bool, default = false }; // item or receptacle inhand
+
+		cleaned(location)     				: { state-fluent, bool, default = true }; // location cleaned or not
+
+		switch_appliance(appliance)			: { state-fluent, bool, default = false };
+		
+		// Action fluents
+		pick(agent, item, location) 		: { action-fluent, bool, default = false }; // pick up item from a location
+		place(agent, item, location) 		: { action-fluent, bool, default = false }; // place item at a location
+		move(agent, location, location)		: { action-fluent, bool, default = false }; // move agent location l1 to l2
+
+		put_in(agent, item, item)			: { action-fluent, bool, default = false }; // put object in receptacle
+		switch_on(agent, appliance)			: { action-fluent, bool, default = false };
+		switch_off(agent, appliance)		: { action-fluent, bool, default = false };
+
+		clean_mop(agent, location)			: { action-fluent, bool, default = false }; // clean location with broom
+		clean_broom(agent, location) 		: { action-fluent, bool, default = false }; // clean location with mop
+
+		DESTINATION(item, location) 		: { non-fluent, bool, default = false }; // Additional nonfluent to specify a goal
+		DESTINATION_2(item, location) 		: { non-fluent, bool, default = false }; // Additional nonfluent to specify a goal
+		GOAL(food, receptacle, location) 	: { non-fluent, bool, default = false }; // Additional nonfluent to specify a goal
+
+		COST(agent, location, location)		: { non-fluent, int, default = 0 }; // Move costs
+
+		FRAGILE(item)						: { non-fluent, book, default = false }; // Fragile Items
+		LIQUID(item)						: { non-fluent, book, default = false }; // Spill Items
+		FOOD_ITEM(item)						: { non-fluent, book, default = false };
+		EQUAL(item, item)					: { non-fluent, book, default = false }; // Equivalent Items
+		CONTAINER(item)						: { non-fluent, book, default = false };
+		MOP_ITEM(item)						: { non-fluent, bool, default = false };
+		BROOM_ITEM(item)					: { non-fluent, bool, default = false };
+		STOVE_ITEM(item)					: { non-fluent, book, default = false };
+		TOASTER_ITEM(item)					: { non-fluent, book, default = false };
+	};
+
+	cpfs {
+
+		manipulation' = Bernoulli(0.4);
+
+		obj-break'(?i) = 
+			if (exists_{?a : agent, ?l : location} (pick(?a, ?i, ?l) ^ ~manipulation ^ FRAGILE(?i) ))
+				then true
+			else if(exists_{?a : agent, ?l : location} (place(?a, ?i, ?l) ^ ~manipulation ^ FRAGILE(?i) ))
+				then true
+			else
+				false;
+
+		obj-loc'(?i, ?l) = 
+			if (exists_{?a : agent} (obj-loc(?i, ?l) ^ pick(?a, ?i, ?l) ^ manipulation ^ FRAGILE(?i) ))
+				then false
+			else if (exists_{?a : agent} (obj-loc(?i, ?l) ^ pick(?a, ?i, ?l) ^ ~FRAGILE(?i) ))
+				then false
+			else if (exists_{?a : agent} (place(?a, ?i, ?l) ^ inhand(?a, ?i)))
+				then true
+			else
+				obj-loc(?i, ?l);
+
+		food-in'(?f, ?i) = 
+			if (exists_{?a : agent} (put_in(?a, ?f, ?i) ^ inhand(?a, ?f) ))
+				then true
+			else
+				food-in(?f, ?i);
+
+		inhand'(?a, ?i) =
+			if ( exists_{?l : location}( pick(?a, ?i, ?l) ^ manipulation ^ FRAGILE(?i) ))
+				then true
+			else if ( exists_{?l : location}( pick(?a, ?i, ?l) ^ ~FRAGILE(?i) ))
+				then true
+			else if(exists_{?l : location}(place(?a, ?i, ?l) ^ inhand(?a, ?i) ))
+				then false
+			else if (exists_{?r: item} (put_in(?a, ?i, ?r) ^ inhand(?a, ?i) ))
+				then false
+			else
+				inhand(?a, ?i);
+
+		cleaned'(?l) = 
+			if 	(exists_{?i : item} (obj-break(?i) ^ obj-loc(?i, ?l))) // Object broke
+				then false
+			else if(exists_{?a : agent, ?i : item} (clean_mop(?a, ?l) ^ obj-loc(?i, ?l) ^ MOP_ITEM(?i) ))
+				then true
+			else
+				cleaned(?l);
+
+		agent-loc'(?a, ?l) = 		
+			if (exists_{?from : location} (move(?a, ?from, ?l) ^ agent-loc(?a, ?from)))
+				then true
+			else if (exists_{?to : location} (move(?a, ?l, ?to) ^ agent-loc(?a, ?l)))
+				then false
+			else 
+				agent-loc(?a, ?l);
+
+		switch_appliance'(?app) = 
+			if (exists_{?a : agent} (switch_on(?a, ?app) ))
+				then true
+			else if (exists_{?a : agent} (switch_off(?a, ?app) ))
+				then false
+			else
+				switch_appliance(?app);
+	};
+
+	reward = 40 * [sum_{?f: food} exists_{?l : location} (obj-loc(?f, ?l) ^ DESTINATION(?f, ?l)) ]
+			+ 40 * [sum_{?i: item} exists_{?i2:item, ?l : location} [(obj-loc(?i, ?l) ^ DESTINATION_2(?i, ?l) ^ ~obj-break(?i) ^ cleaned(?l)) |
+			(obj-loc(?i2, ?l) ^ EQUAL(?i, ?i2) ^ DESTINATION_2(?i, ?l) ^ ~obj-break(?i2) ^ cleaned(?l))]]
+			+ 200 * [sum_{?f: food, ?i: receptacle, ?l: location} (food-in(?f, ?i) ^ GOAL(?f, ?i, ?l))]
+			- 10 * [sum_{?l : location}(~cleaned(?l))]
+			- [sum_{?a: agent, ?wf: location, ?wt: location} [COST(?a, ?wf, ?wt) * move(?a, ?wf, ?wt)]]
+			- [sum_{?a: agent, ?i : item, ?l : location} [ [pick(?a, ?i, ?l) | place(?a, ?i, ?l)] ]];
+
+
+	action-preconditions {
+
+		forall_{?a: agent, ?i : item, ?l : location} [pick(?a, ?i, ?l) => ~TOASTER_ITEM(?i) ^ ~STOVE_ITEM(?i) ^ agent-loc(?a, ?l) ^ obj-loc(?i, ?l) ^ ~obj-break(?i) ];
+		forall_{?a: agent, ?i : item, ?l : location} [place(?a, ?i, ?l) => agent-loc(?a, ?l) ^ ~obj-loc(?i, ?l) ^ inhand(?a, ?i) ];
+		forall_{?a: agent, ?l1 : location, ?l2 : location} [move(?a, ?l1, ?l2) => ~agent-loc(?a, ?l2) ^ agent-loc(?a, ?l1) ];
+
+		forall_{?a: agent, ?f: item, ?i: item} [put_in(?a, ?f, ?i) => ~food-in(?f, ?i) ^ FOOD_ITEM(?f) ^ CONTAINER(?i) ^ [exists_{?l: location}(obj-loc(?i, ?l) ^ agent-loc(?a, ?l))] ^
+												inhand(?a, ?f) ];
+
+		forall_{?a: agent, ?app: appliance} [switch_on(?a, ?app) => ~switch_appliance(?app) ^ 
+											[exists_{?l: location}(obj-loc(?app, ?l) ^ agent-loc(?a, ?l))]  ];
+
+		forall_{?a: agent, ?app: appliance} [switch_off(?a, ?app) => switch_appliance(?app) ^ 
+											[exists_{?l: location}(obj-loc(?app, ?l) ^ agent-loc(?a, ?l))]  ];
+
+		forall_{?a: agent, ?l : location} [clean_mop(?a, ?l) => agent-loc(?a, ?l) ];
+		forall_{?a: agent, ?l : location} [clean_broom(?a, ?l) => agent-loc(?a, ?l) ];
+
+
+	};
+}

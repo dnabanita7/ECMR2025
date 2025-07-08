@@ -1,0 +1,139 @@
+domain domain_virtualhomev1 {
+
+    types {
+        location : object;
+        item : object;
+        agent : object;
+        receptacle : object;
+
+        fragile : item;
+        mobile : item;
+        fixed : item;
+        cleaning_tool : item;
+        perishable : item;
+        electronic : item;
+        furniture : receptacle;
+        appliance : receptacle;
+    };
+
+    pvariables {
+        // State Fluents
+        obj-loc(item, location)            : { state-fluent, bool, default = false };
+        agent-loc(agent, location)         : { state-fluent, bool, default = false };
+        inhand(agent, item)                : { state-fluent, bool, default = false };
+        hand_full(agent)                   : { state-fluent, bool, default = false };
+        cleaned(location)                   : { state-fluent, bool, default = true };
+        needs_cleaning(location)            : { state-fluent, bool, default = false };
+        obj-broken(item)                   : { state-fluent, bool, default = false };
+        anticipate_failure(agent, item)    : { state-fluent, real, default = 0.0 };
+        recovery_action(agent, item)       : { state-fluent, bool, default = false };
+        success_action(agent, item)        : { state-fluent, bool, default = false };
+        mobility(item)                      : { state-fluent, bool, default = false };
+        power_on(appliance)                 : { state-fluent, bool, default = false };
+        item_stored(item, receptacle)       : { state-fluent, bool, default = false };
+
+        // Failure Tracking
+        item_unavailable(item)              : { state-fluent, bool, default = false };
+        handling_error(item)                : { state-fluent, bool, default = false };
+        item_damage(item)                   : { state-fluent, bool, default = false };
+        environment_blocked(location)       : { state-fluent, bool, default = false };
+        appliance_failure(appliance)        : { state-fluent, bool, default = false };
+        cleanliness_issue(location)         : { state-fluent, bool, default = false };
+        preparation_missed(item)            : { state-fluent, bool, default = false };
+
+        // Action Fluents
+        pick(agent, item, location)        : { action-fluent, bool, default = false };
+        place(agent, item, location)       : { action-fluent, bool, default = false };
+        move(agent, location, location)    : { action-fluent, bool, default = false };
+        clean(agent, location)             : { action-fluent, bool, default = false };
+        fetch(agent, item, location)       : { action-fluent, bool, default = false };
+        use_tool(agent, item, location)    : { action-fluent, bool, default = false };
+        fix(agent, item)                   : { action-fluent, bool, default = false };
+        switchon(agent, appliance)         : { action-fluent, bool, default = false };
+        switchoff(agent, appliance)        : { action-fluent, bool, default = false };
+        store(agent, item, receptacle)     : { action-fluent, bool, default = false };
+    };
+
+    cpfs {
+        // Stochastic Failure Tracking
+        item_unavailable'(?i) = Bernoulli(0.1);
+        handling_error'(?i) = Bernoulli(0.05);
+        item_damage'(?i) =
+            if (fragile(?i) ^ handling_error(?i))
+                then Bernoulli(0.4)
+            else item_damage(?i);
+
+        environment_blocked'(?l) = Bernoulli(0.1);
+        appliance_failure'(?appliance) = Bernoulli(0.2);
+        cleanliness_issue'(?l) = Bernoulli(0.15);
+
+        preparation_missed'(?i) =
+            if (exists_{?a : agent} (pick(?a, ?i, ?l)))
+                then Bernoulli(0.05)
+            else preparation_missed(?i);
+
+        obj-broken'(?i) =
+            if (exists_{?a : agent, ?l : location} (pick(?a, ?i, ?l) ^ fragile(?i)))
+                then Bernoulli(0.3)
+            else obj-broken(?i);
+
+        success_action'(?a, ?i) =
+            if (~anticipate_failure(?a, ?i) ^ ~obj-broken(?i) ^ ~handling_error(?i))
+                then true
+            else false;
+
+        recovery_action'(?a, ?i) =
+            if (anticipate_failure(?a, ?i) ^ obj-broken(?i) ^ item_damage(?i))
+                then Bernoulli(0.7)
+            else recovery_action(?a, ?i);
+    };
+
+    reward = 
+        100 * [sum_{?l: location} cleaned(?l)]  
+        - 50 * [sum_{?l: location} needs_cleaning(?l)]  
+        - 10 * [sum_{?a: agent, ?l: location} move(?a, ?l, ?l)]  
+        - 20 * [sum_{?a: agent, ?i: item, ?l: location} (pick(?a, ?i, ?l) | place(?a, ?i, ?l))]  
+        + 50 * [sum_{?a: agent, ?i: item} success_action(?a, ?i)]
+        - 30 * [sum_{?a: agent, ?i: item} recovery_action(?a, ?i)]
+        - 40 * [sum_{?i: item} item_damage(?i)]
+        - 20 * [sum_{?l: location} environment_blocked(?l)]
+        - 25 * [sum_{?appliance: appliance} appliance_failure(?appliance)]
+        + Gaussian(0, 5);
+
+    action-preconditions {
+        forall_{?a: agent, ?i: item, ?l: location} [
+            pick(?a, ?i, ?l) => 
+                agent-loc(?a, ?l) ^ obj-loc(?i, ?l) ^ ~hand_full(?a) ^ ~obj-broken(?i) ^ ~item_unavailable(?i)
+        ];
+
+        forall_{?a: agent, ?i: item, ?l: location} [
+            place(?a, ?i, ?l) => 
+                agent-loc(?a, ?l) ^ inhand(?a, ?i)
+        ];
+
+        forall_{?a: agent, ?l1: location, ?l2: location} [
+            move(?a, ?l1, ?l2) => 
+                agent-loc(?a, ?l1) ^ ~environment_blocked(?l2)
+        ];
+
+        forall_{?a: agent, ?l: location} [
+            clean(?a, ?l) => 
+                agent-loc(?a, ?l) ^ cleanliness_issue(?l)
+        ];
+
+        forall_{?a: agent, ?appliance: appliance} [
+            switchon(?a, ?appliance) => 
+                ~appliance_failure(?appliance)
+        ];
+
+        forall_{?a: agent, ?appliance: appliance} [
+            switchoff(?a, ?appliance) => 
+                power_on(?appliance)
+        ];
+
+        forall_{?a: agent, ?i: cleaning_tool, ?l: location} [
+            use_tool(?a, ?i, ?l) => 
+                agent-loc(?a, ?l) ^ obj-loc(?i, ?l) ^ ~obj-broken(?i)
+        ];
+    };
+}

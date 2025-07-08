@@ -1,0 +1,73 @@
+
+non-fluents nf_instance_serve_the_food_cereal_inst {
+    domain = domain_x_robot_anticipation_serve_the_food_cereal;
+
+    // Objects in the domain
+    objects {
+        location : {coffeetable, kitchencounter, cabinet, fridge};
+        item : {mug, dishbowl_1, dishbowl, mop, cereal, milk};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+        COST(robot, coffeetable, coffeetable) = 0;
+COST(robot, coffeetable, kitchencounter) = 20;
+COST(robot, coffeetable, cabinet) = 16;
+COST(robot, coffeetable, fridge) = 17;
+COST(robot, kitchencounter, coffeetable) = 18;
+COST(robot, kitchencounter, kitchencounter) = 0;
+COST(robot, kitchencounter, cabinet) = 14;
+COST(robot, kitchencounter, fridge) = 19;
+COST(robot, cabinet, coffeetable) = 16;
+COST(robot, cabinet, kitchencounter) = 17;
+COST(robot, cabinet, cabinet) = 0;
+COST(robot, cabinet, fridge) = 15;
+COST(robot, fridge, coffeetable) = 12;
+COST(robot, fridge, kitchencounter) = 13;
+COST(robot, fridge, cabinet) = 20;
+COST(robot, fridge, fridge) = 0;
+        FRAGILE(dishbowl_1) = true;
+FRAGILE(dishbowl) = true;
+        FOOD_ITEM(milk) = true;
+FOOD_ITEM(cereal) = true;
+        MOP_ITEM(mop) = true;
+        CONTAINER(mug) = true;
+CONTAINER(dishbowl_1) = true;
+CONTAINER(dishbowl) = true;
+        EQUAL(dishbowl, dishbowl_1) = true;
+        APPLIANCE(cabinet) = true;
+APPLIANCE(fridge) = true;
+        
+        GOAL_0(cereal, dishbowl, coffeetable) = true;
+GOAL_1(milk, mug, coffeetable) = true;
+        DESTINATION_0(cereal, coffeetable) = true;
+DESTINATION_1(milk, coffeetable) = true;
+DESTINATION_2(mug, coffeetable) = true;
+DESTINATION_3(dishbowl, coffeetable) = true;
+
+    };
+}
+
+instance instance_serve_the_food_cereal {
+    domain = domain_x_robot_anticipation_serve_the_food_cereal;
+    non-fluents = nf_instance_serve_the_food_cereal_inst;
+
+    init-state {
+        agent-loc(robot, coffeetable) = true;
+        human-loc(human, fridge) = true;
+
+        obj-loc(mop, cabinet) = true;
+
+        obj-loc(mug, kitchencounter) = true;
+obj-loc(dishbowl_1, kitchencounter) = true;
+obj-loc(dishbowl, kitchencounter) = true;
+obj-loc(cereal, kitchencounter) = true;
+obj-loc(milk, kitchencounter) = true;
+    };
+
+    max-nondef-actions = 1;
+    horizon = 35;
+    discount = 1.0;
+}
+    

@@ -1,0 +1,113 @@
+Based on 10 iterations, we compute the probability for each action:
+
+    P(Walk to Kitchen) = 9/10 = 0.90
+    P(Grab Cereal | Walk to Kitchen) = 8/9 = 0.89
+    P(Put Cereal in Dishbowl | Grab Cereal) = 5/8 = 0.625
+    P(Put Cereal in Dishbowl | Walk to Kitchen) = 5/9 = 0.56
+    P(Put Cereal in Dishbowl | No Grab Cereal) = 1/2 = 0.50
+=====================================================================
+Task: prepare food
+    P(walk) = 0.600
+    P(grab | at kitchen) = 0.667
+    P(put | grab, at kitchen) = 0.500
+
+Task: prepare breakfast (cereal)
+    P(Walk to Kitchen) = 9/10 = 0.90
+    P(Grab Cereal | Walk to Kitchen) = 8/9 = 0.89
+    P(Put Cereal in Dishbowl | Grab Cereal) = 5/8 = 0.625
+
+Task: prepare breakfast (toast)
+    P(walk) = 0.800
+    P(grab | at kitchen) = 0.625
+    P(putin | grab, at kitchen) = 0.6
+    P(switchon | not_in_hand, at kitchen) = 0.375
+    P(switchon | at kitchen) = 0.625
+
+Task: prepare lunch (salmon)
+    P(walk kitchen) = 0.7
+    P(grab | at kitchen) = 0.85
+    P(boil | salmon, at kitchen) = 0.67
+
+Task: serve the food (cereal)
+    P(walk kitchen) = 0.5
+    P(grab | kitchen) = 0.6
+    P(walk coffeetable) = 0.6
+    P(put | in_hand, coffeetable) = 0.5
+
+Task: serve a drink (water)
+    P(walk kitchen) = 0.7
+    P(grab | kitchen) = 0.714
+    P(walk coffeetable) = 0.8
+    P(put | in_hand, coffeetable) = 1
+
+Task: wash the dishes
+    P(walk sink) = 0.8
+    P(grab plate at sink) = 1
+    P(putin plate | in_hand, sink) = 0.75
+    P(switchon sink | at sink) = 0.375
+    P(scrub | faucet on) = 0.33
+    P(switchoff | switchon) = 0.67
+
+Task: make the bed
+    P(walk to bed) = 0.7
+    P(grab pillow | at bed) = 0.714
+    P(put pillow) = 0.8
+
+Task: do the laundry
+    P(Walk closet) = 1
+    P(grab shirt | closet) = 0.8
+    P(Walk washingmachine) = 1
+    P(Putin clothesshirt washingmachine) = 0.875
+    P(switchon machine) = 1
+
+Task: clean the room (kitchen)
+    P(Walk Kitchen) = 1
+    P(grab washingsponge) = 0.625
+    P(wipe | in_hand sponge, at Kitchen) = 0.6
+
+Task: clean the room (bathroom)
+    P(Walk to bathroom) = 0.7
+    P(grab washingsponge | bathroom) = 0.714
+    P(wipe | in_hand sponge, bathroom) = 0.8
+    P(grab towel | in bathroom) = 0.857
+    P(wipe | in_hand towel, bathroom) = 0.83
+    P(grab garbagecan | bathroom) = 0.714
+    P(putin trash | in_hand garbagecan bathroom) = 0.8
+
+Task: charge the electronic devices
+    P(Walk towards cellphone) = 0.6
+    P(grab cellphone) = 0.67
+    P(walk towards powersocket) = 0.8
+    P(plug cellphone | in_hand cellphone at powersocket) = 0.25
+
+Task: watch TV
+    P(walk to tv) = 0.7
+    P(grab remotecontrol | tv) = 0.714
+    P(switchon tv | in_hand remotecontrol) = 0.8
+
+Task: write letter
+    P(walk to desk) = 0.5
+    P(grab paper | desk ) = 0.6
+    P(grab pen | desk) = 1
+    P(write | in_hand paper pen, desk) = 0.67
+
+Task: read a book
+    P(walk bookshelf) = 0.8
+    P(grab book | bookshelf) = 0.75
+    P(walk coffeetable) = 0.7
+    P(put book | in_hand book, coffeetable) = 1
+    P(read book | in_hand book or coffeetable) = 0.67
+    P(read book | book at coffeetable) = 0.6
+
+Task: take bath
+    P(walk bathroom) = 0.9
+    P(turnon faucet | bathroom) = 1
+    P(getin | faucet on bathroom) = 0.78
+    P(wash | turnon faucet, bathtub, bathroom) = 1
+
+Task: get dressed
+    P(walk closet) = 0.5
+    P(grab clothesshirt | closet) = 0.6
+    P(puton clothesshirt | grab clothesshirt, closet) = 0.33
+    P(grab clothespants | closet) = 0.4
+    P(puton clothespants | grab clothespants, closet) = 0.5

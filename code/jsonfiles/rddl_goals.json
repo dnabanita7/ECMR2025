@@ -1,0 +1,443 @@
+{
+    "tasks": {
+        "prepare breakfast cereal": {
+            "items": [
+                "cereal",
+                "dishbowl",
+                "mug",
+                "milk"
+            ],
+            "locations": [
+                "kitchencounter",
+                "cabinet",
+                "fridge"
+            ],
+            "goal": [
+                "GOAL_0(cereal, dishbowl, kitchencounter) = true;",
+                "GOAL_1(milk, mug, kitchencounter) = true;"
+            ],
+            "destination": [
+                "DESTINATION_0(cereal, kitchencounter) = true;",
+                "DESTINATION_1(milk, kitchencounter) = true;",
+                "DESTINATION_2(milk, kitchencounter) = true;",
+                "DESTINATION_3(mug, kitchencounter) = true;"
+            ],
+            "rewards": [
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_open(?a, ?l) ^ APPLIANCE(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 20 * [ sum_{?a: agent, ?f: item, ?l: location}( pick(?a, ?f, ?l) ^ FOOD_ITEM(?f) )]",
+                "+ 20 * [ sum_{?a: agent, ?p: item, ?l: location}( pick(?a, ?p, ?l) ^ CONTAINER(?p) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_close(?a, ?l) ^ APPLIANCE(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 30 * [ sum_{?a: agent, ?p: item, ?l: location}( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ (DESTINATION_2(?p, ?l) | DESTINATION_3(?p, ?l)) )]",
+                "+ 40 * [ sum_{?a: agent, ?f: item, ?p: item}( put_in(?a, ?f, ?p) ^ FOOD_ITEM(?f) ^ CONTAINER(?p) )]",
+                "+ 50 * [ sum_{?a: agent, ?f: item, ?p: item, ?l: location}( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ (DESTINATION_0(?p, ?l) | DESTINATION_1(?p, ?l)) ^ food-in(?f, ?p) )]",
+                "+ 100 * [ sum_{?f: item, ?p: item, ?l: location}( FOOD_ITEM(?f) ^ CONTAINER(?p) ^ food-in(?f, ?p) ^ (GOAL_0(?f, ?p, ?l) | GOAL_1(?f, ?p, ?l)) )]"
+            ]
+        },
+        "serve a drink water": {
+            "items": [
+                "water",
+                "waterglass"
+            ],
+            "locations": [
+                "coffeetable",
+                "kitchencounter",
+                "cabinet",
+                "faucet"
+            ],
+            "goal": [],
+            "destination": [
+                "DESTINATION_0(waterglass, coffeetable) = true;"
+            ],
+            "rewards": [
+                "+ 20 * [ sum_{?a: agent, ?g: item, ?l: location}( pick(?a, ?g, ?l) ^ CONTAINER(?g) )]",
+                "+ 30 * [ sum_{?a: agent, ?g: item, ?l: location}( place(?a, ?g, ?l) ^ CONTAINER(?g) )]",
+                "+ 30 * [ sum_{?a: agent, ?g: item, ?l: location}( pick(?a, ?g, ?l) ^ CONTAINER(?g) ^ obj-loc'(?g, ?l))]",
+                "+ 50 * [ sum_{?a: agent, ?g: item, ?l: location}( place(?a, ?g, ?l) ^ CONTAINER(?g) ^ DESTINATION_0(?g, ?l) )]",
+                "+ 100 * [ sum_{?g: item, ?l: location}( CONTAINER(?g) ^ obj-loc'(?g, ?l) ^ DESTINATION_0(?g, ?l) )]",
+                "+ 10 * [ sum_{?a: agent, ?locSwitch: location}(agent_switch_on(?a, ?locSwitch) ^ APPLIANCE(?locSwitch) ^ HAS-SWITCH(?locSwitch) ^ agent-loc(?a, ?locSwitch)) ]",
+                "+ 80 * [ sum_{?a: agent, ?drink: item, ?container: item, ?locSwitch: location}(put_in(?a, ?drink, ?container) ^ FOOD_ITEM(?drink) ^ CONTAINER(?container) ^ agent-loc(?a, ?locSwitch) ^ switch_appliance(?locSwitch) ^ HAS-SWITCH(?locSwitch) ^ APPLIANCE(?locSwitch))]",
+                "+ 100 * [ sum_{?a: agent, ?container: item, ?drink: item, ?l: location}(place(?a, ?container, ?l) ^ CONTAINER(?container) ^ FOOD_ITEM(?drink) ^ food-in(?drink, ?container) ^ DESTINATION_0(?container, ?l)) ]"
+            ]
+        },
+        "serve dinner pizza": {
+            "items": [
+                "pizza-base",
+                "plate"
+            ],
+            "locations": [
+                "cabinet",
+                "oven",
+                "coffeetable",
+                "microwave"
+            ],
+            "goal": [
+                "GOAL_0(pizza-base, plate, coffeetable) = true;"
+            ],
+            "destination": [
+                "DESTINATION_0(pizza-base, oven) = true;",
+                "DESTINATION_1(pizza-base, microwave) = true;",
+                "DESTINATION_2(plate, coffeetable) = true;"
+            ],
+            "rewards": [
+                "+ 20 * [ sum_{?a: agent, ?f: item, ?l: location}( pick(?a, ?f, ?l) ^ FOOD_ITEM(?f) )]",
+                "+ 50 * [ sum_{?a: agent, ?f: item, ?l: location} ( place(?a, ?f, ?l) ^ FOOD_ITEM(?f) ^ DESTINATION_0(?f, ?l) )]",
+                "+ 50 * [ sum_{?a: agent, ?p: item, ?l: location}( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_2(?p, ?l) )]",
+                "+ 150 * [ sum_{?f: item, ?p: item, ?l: location}( FOOD_ITEM(?f) ^ CONTAINER(?p) ^ food-in(?f, ?p) ^ GOAL_0(?f, ?p, ?l) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_switch_on(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_switch_off(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_open(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_close(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]"
+            ]
+        },
+        "serve the food cereal": {
+            "items": [
+                "dishbowl",
+                "cereal",
+                "milk",
+                "mug"
+            ],
+            "locations": [
+                "coffeetable",
+                "kitchencounter",
+                "cabinet",
+                "fridge"
+            ],
+            "goal": [
+                "GOAL_0(cereal, dishbowl, coffeetable) = true;",
+                "GOAL_1(milk, mug, coffeetable) = true;"
+            ],
+            "destination": [
+                "DESTINATION_0(cereal, coffeetable) = true;",
+                "DESTINATION_1(milk, coffeetable) = true;",
+                "DESTINATION_2(mug, coffeetable) = true;",
+                "DESTINATION_3(dishbowl, coffeetable) = true;"
+            ],
+            "rewards": [
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_open(?a, ?l) ^ APPLIANCE(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 20 * [ sum_{?a: agent, ?f: item, ?l: location}( pick(?a, ?f, ?l) ^ FOOD_ITEM(?f) )]",
+                "+ 20 * [ sum_{?a: agent, ?p1: item, ?p2: item, ?l: location}( pick(?a, ?p1, ?l) ^ CONTAINER(?p1) ^ pick(?a, ?p2, ?l) ^ CONTAINER(?p2) ^ ~EQUAL(?p1, ?p2) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_close(?a, ?l) ^ APPLIANCE(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 30 * [ sum_{?a: agent, ?p1: item, ?l: location}( place(?a, ?p1, ?l) ^ CONTAINER(?p1) ^ DESTINATION_2(?p1, ?l) )]",
+                "+ 30 * [ sum_{?a: agent, ?p2: item, ?l: location}( place(?a, ?p2, ?l) ^ CONTAINER(?p2) ^ DESTINATION_3(?p2, ?l) )]",
+                "+ 40 * [ sum_{?a: agent, ?f1: item, ?p1: item}( put_in(?a, ?f1, ?p1) ^ FOOD_ITEM(?f1) ^ CONTAINER(?p1) )]",
+                "+ 40 * [ sum_{?a: agent, ?f2: item, ?p2: item}( put_in(?a, ?f2, ?p2) ^ FOOD_ITEM(?f2) ^ CONTAINER(?p2) )]",
+                "+ 50 * [ sum_{?a: agent, ?p1: item, ?l: location}( place(?a, ?p1, ?l) ^ CONTAINER(?p1) ^ DESTINATION_0(?p1, ?l) ^ exists_{?f1: item} (food-in(?f1, ?p1)) )]",
+                "+ 50 * [ sum_{?a: agent, ?p2: item, ?l: location}( place(?a, ?p2, ?l) ^ CONTAINER(?p2) ^ DESTINATION_1(?p2, ?l) ^ exists_{?f2: item} (food-in(?f2, ?p2)) )]",
+                "+ 100 * [ sum_{?f1: item, ?p1: item, ?l: location}( FOOD_ITEM(?f1) ^ CONTAINER(?p1) ^ food-in(?f1, ?p1) ^ GOAL_0(?f1, ?p1, ?l) )]",
+                "+ 100 * [ sum_{?f2: item, ?p2: item, ?l: location}( FOOD_ITEM(?f2) ^ CONTAINER(?p2) ^ food-in(?f2, ?p2) ^ GOAL_1(?f2, ?p2, ?l) )]"
+            ]
+        },
+        "serve a drink coffee": {
+            "items": [
+                "coffee",
+                "glass",
+                "pan",
+                "water"
+            ],
+            "locations": [
+                "cabinet",
+                "coffeemaker",
+                "coffeetable",
+                "stove",
+                "faucet"
+            ],
+            "goal": [
+                "GOAL_0(coffee, glass, coffeemaker) = true;",
+                "GOAL_1(coffee, glass, coffeetable) = true;"
+            ],
+            "destination": [
+                "DESTINATION_0(coffee, coffeemaker) = true;",
+                "DESTINATION_1(water, coffeemaker) = true;",
+                "DESTINATION_2(glass, coffeetable) = true;"
+            ],
+            "rewards": [
+                "+ 20 * [ sum_{?a: agent, ?f: item, ?l: location}( pick(?a, ?f, ?l) ^ FOOD_ITEM(?f) )]",
+                "+ 50 * [ sum_{?a: agent, ?f: item, ?l: location} ( place(?a, ?f, ?l) ^ FOOD_ITEM(?f) ^ DESTINATION_0(?f, ?l) )]",
+                "+ 50 * [ sum_{?a: agent, ?w: item, ?l: location} ( place(?a, ?w, ?l) ^ FOOD_ITEM(?w) ^ DESTINATION_1(?w, ?l) )]",
+                "+ 50 * [ sum_{?a: agent, ?p: item, ?l: location} ( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_2(?p, ?l) )]",
+                "+ 50 * [ sum_{?a: agent, ?p: item, ?l: location} ( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_0(?p, ?l) )]",
+                "+ 50 * [ sum_{?a: agent, ?p: item, ?l: location} ( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_1(?p, ?l) )]",
+                "+ 60 * [ sum_{?a: agent, ?f: item, ?p:item} ( put_in(?a, ?f, ?p) ^ FOOD_ITEM(?f) ^ CONTAINER(?p) )]",
+                "+ 60 * [ sum_{?a: agent, ?w: item, ?p: item} ( put_in(?a, ?w, ?p) ^ FOOD_ITEM(?w) ^ CONTAINER(?p) )]",
+                "+ 50 * [ sum_{?a: agent, ?p: item, ?l: location} ( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_0(?p, ?l) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_open(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_close(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_switch_on(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_switch_off(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 80 * [ sum_{?a: agent, ?f: item, ?p: item, ?l: location} ( pick(?a, ?f, ?l) ^ FOOD_ITEM(?f) ^ food-in(?f, ?p) ^ CONTAINER(?p) )]",
+                "+ 150 * [ sum_{?f: item, ?p: item, ?l: location} ( FOOD_ITEM(?f) ^ CONTAINER(?p) ^ food-in(?f, ?p) ^ GOAL_0(?f, ?p, ?l) )]",
+                "+ 150 * [ sum_{?f: item, ?p: item, ?l: location} ( FOOD_ITEM(?f) ^ CONTAINER(?p) ^ food-in(?f, ?p) ^ GOAL_1(?f, ?p, ?l) )]"
+            ]
+        },
+        "serve breakfast eggs": {
+            "items": [
+                "eggs",
+                "plate",
+                "pan",
+                "water"
+            ],
+            "locations": [
+                "sink",
+                "stove",
+                "microwave",
+                "kitchencounter",
+                "cabinet"
+            ],
+            "goal": [
+                "GOAL_0(eggs, pan, stove) = true;",
+                "GOAL_1(eggs, plate, kitchencounter) = true;"
+            ],
+            "destination": [
+                "DESTINATION_0(pan, stove) = true;",
+                "DESTINATION_1(eggs, kitchencounter) = true;"
+            ],
+            "rewards": [
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_open(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 20 * [ sum_{?a: agent, ?f: item, ?l: location}( pick(?a, ?f, ?l) ^ FOOD_ITEM(?f) )]",
+                "+ 20 * [ sum_{?a: agent, ?p: item, ?l: location}( pick(?a, ?p, ?l) ^ CONTAINER(?p) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_close(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 30 * [ sum_{?a: agent, ?p: item, ?l: location}( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_1(?p, ?l) )]",
+                "+ 30 * [ sum_{?a: agent, ?p: item, ?l: location}( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_0(?p, ?l) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_switch_on(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_switch_off(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 40 * [ sum_{?a: agent, ?f: item, ?p: item}( put_in(?a, ?f, ?p) ^ FOOD_ITEM(?f) ^ CONTAINER(?p) )]",
+                "+ 50 * [ sum_{?a: agent, ?p: item, ?f: item, ?l: location}( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_1(?p, ?l) ^ food-in(?f, ?p) )]",
+                "+ 100 * [ sum_{?f: item, ?p: item, ?l: location}( FOOD_ITEM(?f) ^ CONTAINER(?p) ^ food-in(?f, ?p) ^ (GOAL_0(?f, ?p, ?l) | GOAL_1(?f, ?p, ?l)) )]"
+            ]
+        },
+        "wash the dishes": {
+            "items": [
+                "plate",
+                "cleaning_solution",
+                "washingsponge",
+                "soap"
+            ],
+            "locations": [
+                "sink",
+                "cabinet",
+                "faucet"
+            ],
+            "goal": [],
+            "destination": [
+                "DESTINATION_0(plate, sink) = true;",
+                "DESTINATION_1(soap, sink) = true;",
+                "DESTINATION_2(washingsponge, sink) = true;"
+            ],
+            "rewards": [
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_open(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 20 * [ sum_{?a: agent, ?i: item, ?l: location}( pick(?a, ?i, ?l) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_close(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 30 * [ sum_{?a: agent, ?i: item, ?l: location}( place(?a, ?i, ?l) ^ (DESTINATION_0(?i, ?l) | DESTINATION_1(?i, ?l) | DESTINATION_2(?i, ?l)) )]",
+                "+ 10 * [ sum_{?a: agent, ?l: location}( agent_switch_on(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 40 * [ sum_{?a: agent, ?l: location}( clean(?a, ?l) )]",
+                "+ 10 * [ sum_{?a: agent, ?l: location}( agent_switch_off(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 50 * [ sum_{?l: location}( cleaned(?l) )]"
+            ]
+        },
+        "prepare breakfast toast": {
+            "items": [
+                "breadslice",
+                "plate"
+            ],
+            "locations": [
+                "kitchencounter",
+                "stove",
+                "toaster",
+                "fridge",
+                "cabinet"
+            ],
+            "goal": [
+                "GOAL_0(breadslice, plate, kitchencounter) = true;"
+            ],
+            "destination": [
+                "DESTINATION_0(breadslice, toaster) = true;",
+                "DESTINATION_1(breadslice, kitchencounter) = true;",
+                "DESTINATION_2(plate, kitchencounter) = true;"
+            ],
+            "rewards": [
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_open(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 20 * [ sum_{?a: agent, ?f: item, ?l: location}( pick(?a, ?f, ?l) ^ FOOD_ITEM(?f) )]",
+                "+ 20 * [ sum_{?a: agent, ?p: item, ?l: location}( pick(?a, ?p, ?l) ^ CONTAINER(?p) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_close(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 30 * [ sum_{?a: agent, ?p: item, ?l: location}( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_2(?p, ?l) )]",
+                "+ 40 * [ sum_{?a: agent, ?f: item, ?l: location}( place(?a, ?f, ?l) ^ FOOD_ITEM(?f) ^ DESTINATION_0(?f, ?l) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_switch_on(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_switch_off(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 40 * [ sum_{?a: agent, ?f: item, ?p: item}( put_in(?a, ?f, ?p) ^ FOOD_ITEM(?f) ^ CONTAINER(?p) )]",
+                "+ 50 * [ sum_{?a: agent, ?f: item, ?p: item, ?l: location}( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_1(?p, ?l) ^ food-in(?f, ?p) )]",
+                "+ 100 * [ sum_{?f: item, ?p: item, ?l: location}( FOOD_ITEM(?f) ^ CONTAINER(?p) ^ food-in(?f, ?p) ^ GOAL_0(?f, ?p, ?l) )]"
+            ]
+        },
+        "do the laundry": {
+            "items": [
+                "clothesshirt",
+                "detergent"
+            ],
+            "locations": [
+                "closet",
+                "washingmachine",
+                "cabinet"
+            ],
+            "goal": [],
+            "destination": [
+                "DESTINATION_0(clothesshirt, washingmachine) = true;",
+                "DESTINATION_1(detergent, washingmachine) = true;"
+            ],
+            "rewards": [
+                "+ 20 * [ sum_{?a: agent, ?i: item, ?l: location}( pick(?a, ?i, ?l) )]",
+                "+ 30 * [ sum_{?a: agent, ?i: item, ?l: location}( place(?a, ?i, ?l) ^ (DESTINATION_0(?i, ?l) | DESTINATION_1(?i, ?l)) )]",
+                "+ 10 * [ sum_{?a: agent, ?l: location}( agent_switch_on(?a, ?l) ^ APPLIANCE(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 40 * [ sum_{?a: agent, ?l: location}( switch_appliance(?l) )]",
+                "+ 10 * [ sum_{?a: agent, ?l: location}( agent_switch_off(?a, ?l) ^ APPLIANCE(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 50 * [ sum_{?l: location}( cleaned(?l) )]"
+            ]
+        },
+        "clean the room bathroom": {
+            "items": [
+                "washingsponge",
+                "trash",
+                "towel",
+                "soap"
+            ],
+            "locations": [
+                "sink",
+                "floor",
+                "garbagecan",
+                "bathroomcounter",
+                "cabinet"
+            ],
+            "goal": [],
+            "destination": [
+                "DESTINATION_0(washingsponge, bathroomcounter) = true;",
+                "DESTINATION_1(soap, bathroomcounter) = true;",
+                "DESTINATION_2(towel, bathroomcounter) = true;"
+            ],
+            "rewards": [
+                "+ 20 * [ sum_{?a: agent, ?i: item, ?l: location}( pick(?a, ?i, ?l) )]",
+                "+ 30 * [ sum_{?a: agent, ?i: item, ?l: location}( place(?a, ?i, ?l) ^ (DESTINATION_0(?i, ?l) | DESTINATION_1(?i, ?l) | DESTINATION_2(?i, ?l)))]",
+                "+ 50 * [ sum_{?a: agent, ?l: location}( clean(?a, ?l) ^ exists_{?m: item}(inhand(?a, ?m) ^ MOP_ITEM(?m)) ^ ~cleaned(?l) )]",
+                "+ 100 * [ sum_{?l: location}( cleaned(?l) )]"
+            ]
+        },
+        "clean the room kitchen": {
+            "items": [
+                "washingsponge",
+                "soap",
+                "towel"
+            ],
+            "locations": [
+                "kitchencounter",
+                "cabinet"
+            ],
+            "goal": [],
+            "destination": [
+                "DESTINATION_0(washingsponge, kitchencounter) = true;",
+                "DESTINATION_1(soap, kitchencounter) = true;",
+                "DESTINATION_2(towel, kitchencounter) = true;"
+            ],
+            "rewards": [
+                "+ 20 * [ sum_{?a: agent, ?i: item, ?l: location}( pick(?a, ?i, ?l) )]",
+                "+ 30 * [ sum_{?a: agent, ?i: item, ?l: location}( place(?a, ?i, ?l) ^ (DESTINATION_0(?i, ?l) | DESTINATION_1(?i, ?l) | DESTINATION_2(?i, ?l)) )]",
+                "+ 50 * [ sum_{?a: agent, ?l: location}( clean(?a, ?l) ^ exists_{?m: item}(inhand(?a, ?m) ^ MOP_ITEM(?m)) ^ ~cleaned(?l) )]",
+                "+ 100 * [ sum_{?l: location}( cleaned(?l) )]"
+            ]
+        },
+        "serve breakfast fruits": {
+            "items": [
+                "apple",
+                "banana",
+                "knife",
+                "dishbowl",
+                "plate"
+            ],
+            "locations": [
+                "kitchencounter",
+                "coffeetable",
+                "cabinet"
+            ],
+            "goal": [
+                "GOAL_0(apple, dishbowl, coffeetable) = true;",
+                "GOAL_1(banana, dishbowl, coffeetable) = true;"
+            ],
+            "destination": [
+                "DESTINATION_0(apple, coffeetable) = true;",
+                "DESTINATION_1(banana, coffeetable) = true;",
+                "DESTINATION_2(dishbowl, coffeetable) = true;",
+                "DESTINATION_3(knife, kitchencounter) = true;"
+            ],
+            "rewards": [
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_open(?a, ?l) ^ APPLIANCE(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 20 * [ sum_{?a: agent, ?f: item, ?l: location}( pick(?a, ?f, ?l) ^ FOOD_ITEM(?f) )]",
+                "+ 20 * [ sum_{?a: agent, ?p: item, ?l: location}( pick(?a, ?p, ?l) ^ CONTAINER(?p) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_close(?a, ?l) ^ APPLIANCE(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 30 * [ sum_{?a: agent, ?p: item, ?l: location}( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_2(?p, ?l) )]",
+                "+ 30 * [ sum_{?a: agent, ?i: item, ?l: location}( place(?a, ?i, ?l) ^ DESTINATION_3(?i, ?l) )]",
+                "+ 40 * [ sum_{?a: agent, ?f: item, ?p: item}( put_in(?a, ?f, ?p) ^ FOOD_ITEM(?f) ^ CONTAINER(?p) )]",
+                "+ 50 * [ sum_{?a: agent, ?f: item, ?p: item, ?l: location}( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ (DESTINATION_0(?p, ?l) | DESTINATION_1(?p, ?l)) ^ food-in(?f, ?p) )]",
+                "+ 100 * [ sum_{?f: item, ?p: item, ?l: location}( FOOD_ITEM(?f) ^ CONTAINER(?p) ^ food-in(?f, ?p) ^ (GOAL_0(?f, ?p, ?l) | GOAL_1(?f, ?p, ?l)) )]"
+            ]
+        },
+        "prepare lunch salmon": {
+            "items": [
+                "salmon",
+                "plate"
+            ],
+            "locations": [
+                "kitchencounter",
+                "stove",
+                "fridge",
+                "microwave",
+                "cabinet"
+            ],
+            "goal": [
+                "GOAL_0(salmon, plate, kitchencounter) = true;"
+            ],
+            "destination": [
+                "DESTINATION_0(salmon, stove) = true;",
+                "DESTINATION_1(salmon, kitchencounter) = true;",
+                "DESTINATION_2(plate, kitchencounter) = true;"
+            ],
+            "rewards": [
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_open(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 20 * [ sum_{?a: agent, ?f: item, ?l: location}( pick(?a, ?f, ?l) ^ FOOD_ITEM(?f) )]",
+                "+ 20 * [ sum_{?a: agent, ?p: item, ?l: location}( pick(?a, ?p, ?l) ^ CONTAINER(?p) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_close(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 30 * [ sum_{?a: agent, ?p: item, ?l: location}( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_2(?p, ?l) )]",
+                "+ 40 * [ sum_{?a: agent, ?f: item, ?l: location}( place(?a, ?f, ?l) ^ FOOD_ITEM(?f) ^ DESTINATION_0(?f, ?l) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_switch_on(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_switch_off(?a, ?l) ^ APPLIANCE(?l) ^ HAS-SWITCH(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 40 * [ sum_{?a: agent, ?f: item, ?p: item}( put_in(?a, ?f, ?p) ^ FOOD_ITEM(?f) ^ CONTAINER(?p) )]",
+                "+ 50 * [ sum_{?a: agent, ?f: item, ?p: item, ?l: location}( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_1(?p, ?l) ^ food-in(?f, ?p) )]",
+                "+ 100 * [ sum_{?f: item, ?p: item, ?l: location}( FOOD_ITEM(?f) ^ CONTAINER(?p) ^ food-in(?f, ?p) ^ GOAL_0(?f, ?p, ?l) )]"
+            ]
+        },
+        "prepare food": {
+            "items": [
+                "apple",
+                "plate",
+                "dishbowl"
+            ],
+            "locations": [
+                "kitchencounter",
+                "cabinet"
+            ],
+            "goal": [
+                "GOAL_0(apple, plate, kitchencounter) = true;"
+            ],
+            "destination": [
+                "DESTINATION_0(apple, kitchencounter) = true;",
+                "DESTINATION_1(plate, kitchencounter) = true;"
+            ],
+            "rewards": [
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_open(?a, ?l) ^ APPLIANCE(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 20 * [ sum_{?a: agent, ?f: item, ?l: location}( pick(?a, ?f, ?l) ^ FOOD_ITEM(?f) )]",
+                "+ 20 * [ sum_{?a: agent, ?p: item, ?l: location}( pick(?a, ?p, ?l) ^ CONTAINER(?p) )]",
+                "+ 5 * [ sum_{?a: agent, ?l: location}( agent_close(?a, ?l) ^ APPLIANCE(?l) ^ agent-loc(?a, ?l) )]",
+                "+ 30 * [ sum_{?a: agent, ?p: item, ?l: location}( place(?a, ?p, ?l) ^ CONTAINER(?p) ^ DESTINATION_1(?p, ?l) )]",
+                "+ 40 * [ sum_{?a: agent, ?f: item, ?l: location}( place(?a, ?f, ?l) ^ FOOD_ITEM(?f) ^ DESTINATION_0(?f, ?l) )]",
+                "+ 50 * [ sum_{?a: agent, ?f: item, ?p: item}( put_in(?a, ?f, ?p) ^ FOOD_ITEM(?f) ^ CONTAINER(?p) )]",
+                "+ 100 * [ sum_{?f: item, ?p: item, ?l: location}( FOOD_ITEM(?f) ^ CONTAINER(?p) ^ food-in(?f, ?p) ^ GOAL_0(?f, ?p, ?l) )]"
+            ]
+        }
+    }
+}

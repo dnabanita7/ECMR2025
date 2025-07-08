@@ -1,0 +1,141 @@
+{
+    "tasks": [
+        {
+          "task": "prepare food",
+          "failures": [
+            {"issue": "Apple missing", "recovery": "[walk] <kitchen> (1), Search kitchen cabinet, Find another food item."},
+            {"issue": "Failed to grab apple", "recovery": "[grab] <apple> (1), Try again."},
+            {"issue": "Plate missing", "recovery": "[walk] <kitchen> (1), Use dishbowl."},
+            {"issue": "Failed to grab plate", "recovery": "[grab] <plate> (1), Try again."},
+            {"issue": "Plate falls & breaks", "recovery": "[grab] <broom> (1), Fetch broom, clean up."}
+          ]
+        },
+        {
+          "task": "prepare breakfast (cereal)",
+          "failures": [
+            {"issue": "Cereal missing", "recovery": "[walk] <kitchen> (1), Search cabinet, Find alternative."},
+            {"issue": "Dishbowl missing", "recovery": "[walk] <kitchen> (1), Use plate/mug."},
+            {"issue": "Cereal falls", "recovery": "[put] <cereal> (1) <kitchencounter> (1), Clean up, get more."},
+            {"issue": "Failed to grab dishbowl", "recovery": "[grab] <dishbowl> (1), Try again."},
+            {"issue": "Dishbowl falls & breaks", "recovery": "[grab] <broom> (1), Fetch broom, clean up."},
+            {"issue": "Milk missing", "recovery": "[walk] <fridge> (1), Find alternative liquid (water, juice)."},
+            {"issue": "Cereal box empty", "recovery": "[walk] <kitchen> (1), Find another box or replace meal."}
+          ]
+        },
+        {
+          "task": "prepare breakfast (toast)",
+          "failures": [
+            {"issue": "Bread missing", "recovery": "[walk] <fridge> (1), Check fridge/cabinet, Find alternative."},
+            {"issue": "Failed to switch toaster", "recovery": "[switchon] <toaster> (1), Try again."},
+            {"issue": "Bread falls", "recovery": "[put] <breadslice> (1) <kitchencounter> (1), Retrieve or replace."},
+            {"issue": "Bread burnt", "recovery": "[grab] <breadslice> (1), use stove"}
+          ]
+        },
+        {
+          "task": "prepare lunch (salmon)",
+          "failures": [
+            {"issue": "Salmon missing", "recovery": "[walk] <fridge> (1), Check fridge, Find alternative."},
+            {"issue": "Microwave not working", "recovery": "[switchon] <stove> (1), Check power or use stove."},
+            {"issue": "Salmon falls", "recovery": "[put] <salmon> (1) <kitchencounter> (1), Pick up mop and clean and get alternative"},
+            {"issue": "Salmon burned", "recovery": "[grab] <salmon> (1), Discard and prepare another portion."}
+          ]
+        },
+        {
+          "task": "serve the food (cereal)",
+          "failures": [
+            {"issue": "Dishbowl missing", "recovery": "[walk] <kitchen> (1), Use another container."},
+            {"issue": "Coffee table blocked", "recovery": "[walk] <coffeetable> (1), Place countertop"},
+            {"issue": "Failed to grab dishbowl", "recovery": "[grab] <plate> (1), Try again."},
+            {"issue": "Dishbowl falls & breaks", "recovery": "[grab] <broom> (1), Fetch broom, clean up."}
+          ]
+        },
+        {
+          "task": "serve a drink (water)",
+          "failures": [
+            {"issue": "glass missing", "recovery": "[walk] <kitchen> (1), Use another glass"},
+            {"issue": "Coffee table blocked", "recovery": "[walk] <coffeetable> (1), Place countertop"},
+            {"issue": "glass falls and breaks", "recovery": "[put] <glass> (1) <coffeetable> (1), use mop/broom, get another glass"}
+          ]
+        },
+        {
+            "task": "serve a drink (coffee)",
+            "failures": [
+                {"issue": "coffee maker not working", "recovery": "[grab] pan, [putin] <coffee> <pan>, [walk] <faucet>, [switchon] <faucet>, [putin] <water> <pan>, [switchoff] <faucet>, [switchon] <stove>, use stove"},
+                {"issue": "glass missing", "recovery": "[walk] <kitchen> (1), Use another glass"},
+                {"issue": "Coffee table blocked", "recovery": "[walk] <coffeetable> (1), Place countertop"},
+                {"issue": "glass falls and breaks", "recovery": "[put] <glass> (1) <coffeetable> (1), use mop/broom, get another glass"}
+            ]
+        },
+        {
+            "task": "serve pizza",
+            "failures": [
+                {"issues": "oven not working", "recovery": "[walk] <microwave>, use microwave"},
+                {"issue": "Plate missing", "recovery": "[walk] <kitchen> (1), Use another plate."},
+                {"issue": "Failed to grab plate", "recovery": "[grab] <plate> (1), Try again."},
+                {"issue": "Plate falls & breaks", "recovery": "[grab] <broom> (1), Fetch broom, clean up."}
+            ]
+        },
+        {
+            "task": "serve eggs",
+            "failures": [
+                {"issues": "stove not working", "recovery": "[walk] <microwave>, use microwave"},
+                {"issue": "Plate missing", "recovery": "[walk] <kitchen> (1), Use another plate."},
+                {"issue": "Failed to grab plate", "recovery": "[grab] <plate> (1), Try again."},
+                {"issue": "Plate falls & breaks", "recovery": "[grab] <broom> (1), Fetch broom, clean up."}
+            ]
+        },
+        {
+            "task": "serve fruits",
+            "failures": [
+                {"issue": "Apple missing", "recovery": "[walk] <kitchen> (1), Search kitchen cabinet, Find another food item."},
+                {"issue": "Failed to grab apple", "recovery": "[grab] <apple> (1), Try again."},
+                {"issue": "Banana missing", "recovery": "[walk] <kitchen> (1), Search kitchen cabinet, Find another food item."},
+                {"issue": "Failed to grab banana", "recovery": "[grab] <apple> (1), Try again."},
+                {"issue": "dishbowl missing", "recovery": "[walk] <kitchen> (1), Use plate."},
+                {"issue": "Failed to grab plate", "recovery": "[grab] <plate> (1), Try again."},
+                {"issue": "Plate falls & breaks", "recovery": "[grab] <broom> (1), Fetch broom, clean up."}
+          ]
+        },
+            {
+            "task": "wash the dishes",
+            "failures": [
+            {"issue": "Plate missing", "recovery": "[walk]  (1), Find another dirty dish."},
+            {"issue": "Faucet not working", "recovery": "[switchon]  (1), Use other faucet"},
+            {"issue": "Sponge missing", "recovery": "[walk]  (1), Use cloth/paper towel."},
+            {"issue": "Plate falls & breaks", "recovery": "[grab]  (1), Fetch broom, clean up."},
+            {"issue": "Failed to grab plate", "recovery": "[grab]  (1), Try again."},
+            {"issue": "Soap missing", "recovery": "[walk]  (1), Use water only or find cleaning solution."}
+            ]
+            },
+            {
+              "task": "do the laundry",
+              "failures": [
+                {"issue": "Clothes missing", "recovery": "[walk] <closet> (1), Locate dirty clothes."},
+                {"issue": "Washing machine not working", "recovery": "[switchon] <washingmachine> (1), Check power or use alternative method."},
+                {"issue": "Detergent missing", "recovery": "[walk] <kitchen> (1), Find alternative soap."},
+                {"issue": "Clothes left in machine", "recovery": "[grab] <clothespile> (1), Remove and hang clothes."}
+              ]
+            },
+            
+            {
+            "task": "clean the room (kitchen)",
+            "failures": [
+            {"issue": "Sponge missing", "recovery": "[walk]  (1), Find another cleaning tool."},
+            {"issue": "Counter already clean", "recovery": "[lookat]  (1), Find another area to clean."},
+            {"issue": "Soap missing", "recovery": "[walk]  (1), Use water only or find dishwashing liquid."},
+            {"issue": "Water spilled", "recovery": "[grab]  (1), Wipe surface dry."}
+            ]
+            },
+      
+      {
+        "task": "clean the room (bathroom)",
+        "failures": [
+          {"issue": "Sink dirty", "recovery": "[walk] <bathroomcounter> (1), [grab] <washingsponge> (1), Scrub sink."},
+          {"issue": "Failed to grab sponge", "recovery": "[grab] <washingsponge> (1), Try again."},
+          {"issue": "Faucet not working", "recovery": "[switchon] <faucet> (1), Use a different water source."},
+          {"issue": "Water spills", "recovery": "[grab] <towel> (1), Wipe surface dry."}
+        ]
+      }]
+
+}
+      

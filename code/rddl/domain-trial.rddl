@@ -1,0 +1,111 @@
+domain domain-trial {
+
+    types {
+        location : object;
+        item : object;
+        agent : object;
+
+        food : item;
+        toBake : item;
+    };
+
+    pvariables {
+
+        // State fluents
+        obj-break(item)                     : { state-fluent, bool, default = false };
+        obj-loc(item, location)             : { state-fluent, bool, default = false };
+        agent-loc(agent, location)          : { state-fluent, bool, default = false };
+        inhand(agent, item)                 : { state-fluent, bool, default = false };
+        hand_full(agent)                    : { state-fluent, bool, default = false };
+        cleaned(location)                   : { state-fluent, bool, default = true };
+        bake(toBake)                        : { state-fluent, bool, default = false };
+        anticipated_failure(item)           : { state-fluent, bool, default = false };
+        cake_ready                          : { state-fluent, bool, default = false };
+
+        // Human failure probability model
+        failure_prob(agent, item, task)     : { state-fluent, real, default = 0.2 };
+
+        // Cake making state fluents
+        has_ingredient(agent, item)         : { state-fluent, bool, default = false };
+        mixed(item)                         : { state-fluent, bool, default = false };
+        oven_preheated                      : { state-fluent, bool, default = false };
+        cake_burnt                          : { state-fluent, bool, default = false };
+        
+        // Action fluents
+        pick(agent, item, location)         : { action-fluent, bool, default = false };
+        place(agent, item, location)        : { action-fluent, bool, default = false };
+        move(agent, location, location)     : { action-fluent, bool, default = false };
+        clean(agent, location)              : { action-fluent, bool, default = false };
+        Tobake(agent, toBake)               : { action-fluent, bool, default = false };
+        mix(agent, item)                    : { action-fluent, bool, default = false };
+        preheat_oven(agent)                 : { action-fluent, bool, default = false };
+        
+        // Anticipatory recovery actions
+        assist(agent, item, task)           : { action-fluent, bool, default = false };
+        secure(item)                        : { action-fluent, bool, default = false };
+        preemptive_recovery(agent, item, task) : { action-fluent, bool, default = false };
+    };
+
+    cpfs {
+        anticipated_failure'(?i) =
+            if (exists_{?a : agent, ?l : location} (pick(?a, ?i, ?l) ^ Bernoulli(failure_prob(?a, ?i, "pick"))))
+                then true
+            else anticipated_failure(?i);
+
+        obj-break'(?i) = 
+            if (exists_{?a : agent, ?l : location} (pick(?a, ?i, ?l) ^ ~secure(?i) ^ Bernoulli(failure_prob(?a, ?i, "pick"))))
+                then true
+            else if (exists_{?a : agent, ?l : location} (place(?a, ?i, ?l) ^ ~secure(?i) ^ Bernoulli(failure_prob(?a, ?i, "place"))))
+                then true
+            else false;
+
+        cake_ready' =
+            if (exists_{?a: agent} (bake(?a, cake) ^ mixed(cake) ^ oven_preheated))
+                then true
+            else cake_ready;
+
+        oven_preheated' =
+            if (exists_{?a: agent} (preheat_oven(?a)))
+                then true
+            else oven_preheated;
+
+        mixed'(?i) =
+            if (exists_{?a: agent} (mix(?a, ?i) ^ has_ingredient(?a, ?i)))
+                then true
+            else mixed(?i);
+
+        preemptive_recovery'(?a, ?i, ?task) =
+            if (anticipated_failure(?i))
+                then true
+            else preemptive_recovery(?a, ?i, ?task);
+
+        cleaned'(?l) =
+            if (exists_{?i : item} (obj-break(?i) ^ obj-loc(?i, ?l)))
+                then false
+            else if (exists_{?a : agent} ( clean(?a, ?l) ))
+                then true
+            else cleaned(?l);
+    };
+
+    reward =
+        50 * (preemptive_recovery(robot, ?i, ?task))
+        + 40 * (cake_ready)
+        + 20 * [sum_{?i: item} exists_{?l : location} (obj-loc'(?i, ?l) ^ DESTINATION(?i, ?l) ^ ~obj-break(?i) ^ cleaned(?l)) ]
+        + 15 * [sum_{?i : item} (secure(?i))]
+        + 20 * [sum_{?i: toBake} (bake(?i) )]
+        + 25 * (assist(robot, ?i, ?task))
+        - [sum_{?a: agent, ?l1: location, ?l2: location} [COST(?a, ?l1, ?l2) * move(?a, ?l1, ?l2)]]
+        - [sum_{?a: agent, ?i : item, ?l : location} [10 * (pick(?a, ?i, ?l) | place(?a, ?i, ?l)) ]];
+
+    action-preconditions {
+        forall_{?a: agent, ?i : item, ?l : location} [pick(?a, ?i, ?l) => ~hand_full(?a) ^ agent-loc(?a, ?l) ^ obj-loc(?i, ?l) ^ ~obj-break(?i)];
+        forall_{?a: agent, ?i : item, ?l : location} [place(?a, ?i, ?l) => agent-loc(?a, ?l) ^ ~obj-loc(?i, ?l) ^ inhand(?a, ?i)];
+        forall_{?a: agent, ?l1 : location, ?l2 : location} [move(?a, ?l1, ?l2) => ~agent-loc(?a, ?l2) ^ agent-loc(?a, ?l1)];
+        forall_{?a: agent, ?l : location} [clean(?a, ?l) => agent-loc(?a, ?l)];
+        forall_{?a: agent, ?i : toBake} [Tobake(?a, ?i) => [exists_{?l: location} (agent-loc(?a, ?l) ^ COOKTOP(?l))] ^ ~bake(?i)];
+        forall_{?i : item} [secure(?i) => ~obj-break(?i)];
+        forall_{?a: agent, ?i : item, ?task} [assist(?a, ?i, ?task) => anticipated_failure(?i)];
+        forall_{?a: agent} [preheat_oven(?a) => agent-loc(?a, stove)];
+        forall_{?a: agent, ?i : item, ?task} [preemptive_recovery(?a, ?i, ?task) => anticipated_failure(?i)];
+    };
+}

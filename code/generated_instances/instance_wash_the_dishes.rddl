@@ -1,0 +1,64 @@
+
+non-fluents nf_instance_wash_the_dishes_inst {
+    domain = domain_x_robot_anticipation_wash_the_dishes;
+
+    // Objects in the domain
+    objects {
+        location : {sink, cabinet, faucet};
+        item : {soap, cleaning_solution, mop, plate, plate_1, washingsponge};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+        COST(robot, sink, sink) = 0;
+COST(robot, sink, cabinet) = 20;
+COST(robot, sink, faucet) = 12;
+COST(robot, cabinet, sink) = 11;
+COST(robot, cabinet, cabinet) = 0;
+COST(robot, cabinet, faucet) = 19;
+COST(robot, faucet, sink) = 16;
+COST(robot, faucet, cabinet) = 18;
+COST(robot, faucet, faucet) = 0;
+        FRAGILE(plate_1) = true;
+FRAGILE(plate) = true;
+        
+        MOP_ITEM(mop) = true;
+        CONTAINER(plate_1) = true;
+CONTAINER(plate) = true;
+        EQUAL(plate, plate_1) = true;
+        APPLIANCE(sink) = true;
+APPLIANCE(faucet) = true;
+APPLIANCE(cabinet) = true;
+        HAS-SWITCH(sink) = true;
+HAS-SWITCH(faucet) = true;
+        
+        DESTINATION_0(plate, sink) = true;
+DESTINATION_1(soap, sink) = true;
+DESTINATION_2(washingsponge, sink) = true;
+
+    };
+}
+
+instance instance_wash_the_dishes {
+    domain = domain_x_robot_anticipation_wash_the_dishes;
+    non-fluents = nf_instance_wash_the_dishes_inst;
+
+    init-state {
+        agent-loc(robot, sink) = true;
+        human-loc(human, faucet) = true;
+
+        obj-loc(mop, cabinet) = true;
+
+        obj-loc(soap, cabinet) = true;
+obj-loc(cleaning_solution, cabinet) = true;
+obj-loc(plate, cabinet) = true;
+obj-loc(plate_1, cabinet) = true;
+obj-loc(washingsponge, cabinet) = true;
+    };
+
+    max-nondef-actions = 1;
+    horizon = 35;
+    discount = 1.0;
+}
+    

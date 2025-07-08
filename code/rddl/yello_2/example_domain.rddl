@@ -1,0 +1,70 @@
+domain example_domain{
+
+
+types {
+
+loc : object;
+agent : object;
+human : object;
+
+};
+
+
+pvariables{
+
+// state fluents
+agent_loc(agent, loc) : {state-fluent, bool, default=false}; //done
+human_loc(human, loc) : {state-fluent, bool, default=false}; //done
+
+
+//action fluents
+
+agent_moves(agent, loc, loc) : {action-fluent, bool, default=false};
+human_moves(human, loc, loc) : {action-fluent, bool, default=false};
+
+
+//non fluents
+DESTINATION_0(agent, loc) : { non-fluent, bool, default = false };
+DESTINATION_1(human, loc) : { non-fluent, bool, default = false };
+
+
+};
+
+cpfs {
+
+
+agent_loc'(?a, ?l) = if (exists_{?from: loc} [ agent_loc(?a, ?from) ^ 
+agent_moves(?a, ?from, ?l) ])
+                        then true
+                     else false;
+
+human_loc'(?h, ?l) = if (exists_{?from: loc} [ human_loc(?h, ?from) ^ human_moves(?h, ?from, ?l) ])
+                        then true
+                     else false;
+
+
+};
+
+
+reward = 
+         sum_{?a: agent} [ 
+            sum_{?l: loc} [ 
+               if (DESTINATION_0(?a, ?l) ^ agent_loc(?a, ?l)) 
+               then 10 
+               else 0 
+            ]
+         ]
+       + 
+         sum_{?h: human} [ 
+            sum_{?l: loc} [ 
+               if (DESTINATION_1(?h, ?l) ^ human_loc(?h, ?l)) 
+               then 10 
+               else 0 
+            ]
+         ];
+
+
+
+
+} 
+

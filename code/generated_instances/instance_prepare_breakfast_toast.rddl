@@ -1,0 +1,79 @@
+
+non-fluents nf_instance_prepare_breakfast_toast_inst {
+    domain = domain_x_robot_anticipation_prepare_breakfast_toast;
+
+    // Objects in the domain
+    objects {
+        location : {kitchencounter, stove, toaster, fridge, cabinet};
+        item : {plate_1, mop, plate, breadslice};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+        COST(robot, kitchencounter, kitchencounter) = 0;
+COST(robot, kitchencounter, stove) = 18;
+COST(robot, kitchencounter, toaster) = 11;
+COST(robot, kitchencounter, fridge) = 10;
+COST(robot, kitchencounter, cabinet) = 19;
+COST(robot, stove, kitchencounter) = 11;
+COST(robot, stove, stove) = 0;
+COST(robot, stove, toaster) = 19;
+COST(robot, stove, fridge) = 20;
+COST(robot, stove, cabinet) = 13;
+COST(robot, toaster, kitchencounter) = 14;
+COST(robot, toaster, stove) = 20;
+COST(robot, toaster, toaster) = 0;
+COST(robot, toaster, fridge) = 15;
+COST(robot, toaster, cabinet) = 12;
+COST(robot, fridge, kitchencounter) = 11;
+COST(robot, fridge, stove) = 15;
+COST(robot, fridge, toaster) = 20;
+COST(robot, fridge, fridge) = 0;
+COST(robot, fridge, cabinet) = 20;
+COST(robot, cabinet, kitchencounter) = 11;
+COST(robot, cabinet, stove) = 15;
+COST(robot, cabinet, toaster) = 10;
+COST(robot, cabinet, fridge) = 10;
+COST(robot, cabinet, cabinet) = 0;
+        FRAGILE(plate_1) = true;
+FRAGILE(plate) = true;
+        FOOD_ITEM(breadslice) = true;
+        MOP_ITEM(mop) = true;
+        CONTAINER(plate_1) = true;
+CONTAINER(plate) = true;
+        EQUAL(plate, plate_1) = true;
+        APPLIANCE(cabinet) = true;
+APPLIANCE(toaster) = true;
+APPLIANCE(fridge) = true;
+APPLIANCE(stove) = true;
+        HAS-SWITCH(toaster) = true;
+HAS-SWITCH(stove) = true;
+        GOAL_0(breadslice, plate, kitchencounter) = true;
+        DESTINATION_0(breadslice, toaster) = true;
+DESTINATION_1(breadslice, kitchencounter) = true;
+DESTINATION_2(plate, kitchencounter) = true;
+
+    };
+}
+
+instance instance_prepare_breakfast_toast {
+    domain = domain_x_robot_anticipation_prepare_breakfast_toast;
+    non-fluents = nf_instance_prepare_breakfast_toast_inst;
+
+    init-state {
+        agent-loc(robot, kitchencounter) = true;
+        human-loc(human, cabinet) = true;
+
+        obj-loc(mop, cabinet) = true;
+
+        obj-loc(plate_1, kitchencounter) = true;
+obj-loc(plate, kitchencounter) = true;
+obj-loc(breadslice, kitchencounter) = true;
+    };
+
+    max-nondef-actions = 1;
+    horizon = 35;
+    discount = 1.0;
+}
+    

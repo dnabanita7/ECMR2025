@@ -1,0 +1,66 @@
+
+non-fluents nf_instance_prepare_breakfast_cereal_inst {
+    domain = domain_x_robot_anticipation_prepare_breakfast_cereal;
+
+    // Objects in the domain
+    objects {
+        location : {kitchencounter, cabinet, fridge};
+        item : {mug, dishbowl_1, dishbowl, mop, cereal, milk};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+        COST(robot, kitchencounter, kitchencounter) = 0;
+COST(robot, kitchencounter, cabinet) = 16;
+COST(robot, kitchencounter, fridge) = 10;
+COST(robot, cabinet, kitchencounter) = 19;
+COST(robot, cabinet, cabinet) = 0;
+COST(robot, cabinet, fridge) = 10;
+COST(robot, fridge, kitchencounter) = 13;
+COST(robot, fridge, cabinet) = 15;
+COST(robot, fridge, fridge) = 0;
+        FRAGILE(dishbowl_1) = true;
+FRAGILE(dishbowl) = true;
+        FOOD_ITEM(milk) = true;
+FOOD_ITEM(cereal) = true;
+        MOP_ITEM(mop) = true;
+        CONTAINER(mug) = true;
+CONTAINER(dishbowl_1) = true;
+CONTAINER(dishbowl) = true;
+        EQUAL(dishbowl, dishbowl_1) = true;
+        APPLIANCE(cabinet) = true;
+APPLIANCE(fridge) = true;
+        
+        GOAL_0(cereal, dishbowl, kitchencounter) = true;
+GOAL_1(milk, mug, kitchencounter) = true;
+        DESTINATION_0(cereal, kitchencounter) = true;
+DESTINATION_1(milk, kitchencounter) = true;
+DESTINATION_2(milk, kitchencounter) = true;
+DESTINATION_3(mug, kitchencounter) = true;
+
+    };
+}
+
+instance instance_prepare_breakfast_cereal {
+    domain = domain_x_robot_anticipation_prepare_breakfast_cereal;
+    non-fluents = nf_instance_prepare_breakfast_cereal_inst;
+
+    init-state {
+        agent-loc(robot, kitchencounter) = true;
+        human-loc(human, fridge) = true;
+
+        obj-loc(mop, cabinet) = true;
+
+        obj-loc(mug, kitchencounter) = true;
+obj-loc(dishbowl_1, kitchencounter) = true;
+obj-loc(dishbowl, kitchencounter) = true;
+obj-loc(cereal, kitchencounter) = true;
+obj-loc(milk, kitchencounter) = true;
+    };
+
+    max-nondef-actions = 1;
+    horizon = 35;
+    discount = 1.0;
+}
+    

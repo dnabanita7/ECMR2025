@@ -1,0 +1,76 @@
+
+non-fluents nf_instance_clean_the_room_bathroom_inst {
+    domain = domain_x_robot_anticipation_clean_the_room_bathroom;
+
+    // Objects in the domain
+    objects {
+        location : {sink, floor, garbagecan, bathroomcounter, cabinet};
+        item : {soap, washingsponge, mop, towel, trash};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+        COST(robot, sink, sink) = 0;
+COST(robot, sink, floor) = 13;
+COST(robot, sink, garbagecan) = 13;
+COST(robot, sink, bathroomcounter) = 12;
+COST(robot, sink, cabinet) = 20;
+COST(robot, floor, sink) = 14;
+COST(robot, floor, floor) = 0;
+COST(robot, floor, garbagecan) = 20;
+COST(robot, floor, bathroomcounter) = 12;
+COST(robot, floor, cabinet) = 15;
+COST(robot, garbagecan, sink) = 10;
+COST(robot, garbagecan, floor) = 13;
+COST(robot, garbagecan, garbagecan) = 0;
+COST(robot, garbagecan, bathroomcounter) = 20;
+COST(robot, garbagecan, cabinet) = 18;
+COST(robot, bathroomcounter, sink) = 18;
+COST(robot, bathroomcounter, floor) = 12;
+COST(robot, bathroomcounter, garbagecan) = 13;
+COST(robot, bathroomcounter, bathroomcounter) = 0;
+COST(robot, bathroomcounter, cabinet) = 20;
+COST(robot, cabinet, sink) = 20;
+COST(robot, cabinet, floor) = 11;
+COST(robot, cabinet, garbagecan) = 12;
+COST(robot, cabinet, bathroomcounter) = 10;
+COST(robot, cabinet, cabinet) = 0;
+        
+        
+        MOP_ITEM(mop) = true;
+        
+        
+        APPLIANCE(sink) = true;
+APPLIANCE(cabinet) = true;
+APPLIANCE(garbagecan) = true;
+        HAS-SWITCH(sink) = true;
+        
+        DESTINATION_0(washingsponge, bathroomcounter) = true;
+DESTINATION_1(soap, bathroomcounter) = true;
+DESTINATION_2(towel, bathroomcounter) = true;
+
+    };
+}
+
+instance instance_clean_the_room_bathroom {
+    domain = domain_x_robot_anticipation_clean_the_room_bathroom;
+    non-fluents = nf_instance_clean_the_room_bathroom_inst;
+
+    init-state {
+        agent-loc(robot, sink) = true;
+        human-loc(human, cabinet) = true;
+
+        obj-loc(mop, cabinet) = true;
+
+        obj-loc(soap, bathroomcounter) = true;
+obj-loc(washingsponge, bathroomcounter) = true;
+obj-loc(towel, bathroomcounter) = true;
+obj-loc(trash, bathroomcounter) = true;
+    };
+
+    max-nondef-actions = 1;
+    horizon = 35;
+    discount = 1.0;
+}
+    

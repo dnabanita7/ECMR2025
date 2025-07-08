@@ -1,0 +1,49 @@
+{
+        "Rooms": [
+            "bathroom",
+            "kitchen"
+        ],
+        "Furniture": [
+            "bathroomcabinet",
+            "bathroomcounter",
+            "faucet",
+            "garbagecan",
+            "coffeetable",
+            "closet",
+            "kitchencabinet",
+            "kitchencounter",
+            "sink",
+            "coffeetable",
+            "cabinet",
+            "coffeemaker"
+        ],
+        "Items": [
+            "clothesshirt",
+            "cleaning_solution",
+            "plate",
+            "washingsponge",
+            "dishwashingliquid",
+            "waterglass",
+            "dishbowl",
+            "mug"
+        ],
+        "Appliances": [
+            "washingmachine",
+            "fridge",
+            "coffeemaker",
+            "toaster",
+            "breadslice",
+            "stove",
+            "microwave"
+        ],
+        "Food": [
+            "bananas",
+            "apple",
+            "breadslice",
+            "salmon",
+            "pizza",
+            "eggs",
+            "coffee",
+            "cereal"
+        ]
+    }

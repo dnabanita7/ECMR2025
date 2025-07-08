@@ -1,0 +1,60 @@
+
+non-fluents nf_instance_prepare_food_inst {
+    domain = domain_x_robot_anticipation_prepare_food;
+
+    // Objects in the domain
+    objects {
+        location : {kitchencounter, cabinet};
+        item : {dishbowl_1, dishbowl, mop, plate, apple, plate_1};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+        COST(robot, kitchencounter, kitchencounter) = 0;
+COST(robot, kitchencounter, cabinet) = 13;
+COST(robot, cabinet, kitchencounter) = 15;
+COST(robot, cabinet, cabinet) = 0;
+        FRAGILE(plate_1) = true;
+FRAGILE(dishbowl_1) = true;
+FRAGILE(plate) = true;
+FRAGILE(dishbowl) = true;
+        FOOD_ITEM(apple) = true;
+        MOP_ITEM(mop) = true;
+        CONTAINER(plate_1) = true;
+CONTAINER(dishbowl_1) = true;
+CONTAINER(plate) = true;
+CONTAINER(dishbowl) = true;
+        EQUAL(dishbowl, dishbowl_1) = true;
+EQUAL(plate, plate_1) = true;
+        APPLIANCE(cabinet) = true;
+        
+        GOAL_0(apple, plate, kitchencounter) = true;
+        DESTINATION_0(apple, kitchencounter) = true;
+DESTINATION_1(plate, kitchencounter) = true;
+
+    };
+}
+
+instance instance_prepare_food {
+    domain = domain_x_robot_anticipation_prepare_food;
+    non-fluents = nf_instance_prepare_food_inst;
+
+    init-state {
+        agent-loc(robot, kitchencounter) = true;
+        human-loc(human, cabinet) = true;
+
+        obj-loc(mop, cabinet) = true;
+
+        obj-loc(dishbowl_1, kitchencounter) = true;
+obj-loc(dishbowl, kitchencounter) = true;
+obj-loc(plate, kitchencounter) = true;
+obj-loc(apple, kitchencounter) = true;
+obj-loc(plate_1, kitchencounter) = true;
+    };
+
+    max-nondef-actions = 1;
+    horizon = 35;
+    discount = 1.0;
+}
+    

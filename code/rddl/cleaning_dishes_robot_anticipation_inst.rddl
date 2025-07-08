@@ -1,0 +1,60 @@
+non-fluents nf_cleaning_dishes_robot_anticipation_inst {
+    domain = cleaning_dishes_robot_anticipation;
+
+    objects {
+        location : {sink, countertop, closet};
+        item : {plate_1, plate_2, mop};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+        COST(robot, sink, sink) = 0;
+        COST(robot, countertop, countertop) = 0;
+        COST(robot, closet, closet) = 0;
+
+
+        COST(robot, sink, countertop) = 12;
+        COST(robot, countertop, sink) = 12;
+        COST(robot, sink, closet) = 14;
+        COST(robot, closet, sink) = 14;
+        COST(robot, countertop, closet) = 10;
+        COST(robot, closet, countertop) = 10;
+
+
+        FRAGILE(plate_1) = false;
+        FRAGILE(plate_2) = true;
+        FRAGILE(mop) = false;
+        DESTINATION(plate_1, sink) = true;
+        DESTINATION(plate_2, sink) = true;
+        MOP_ITEM(mop) = true;
+
+        //EQUAL(plate_1, plate_2) = true;
+        //EQUAL(mop, plate_1) = false;
+        //EQUAL(mop, plate_2) = false;
+
+        //GOAL_LOCATION(sink) = true;
+    };
+}
+
+instance cleaning_dishes_robot_anticipation_inst {
+    domain = cleaning_dishes_robot_anticipation;
+    non-fluents = nf_cleaning_dishes_robot_anticipation_inst;
+
+    init-state {
+        obj-loc(plate_1, countertop) = true;
+        obj-loc(plate_2, countertop) = true;
+        obj-loc(mop, closet) = true;
+        
+        agent-loc(robot, closet) = true;
+        human-loc(human, countertop) = true;
+
+        cleaned(sink) = false;
+        cleaned(countertop) = true;
+        cleaned(closet) = true;
+    };
+
+    max-nondef-actions = 1;
+    horizon = 10;
+    discount = 1.0;
+}

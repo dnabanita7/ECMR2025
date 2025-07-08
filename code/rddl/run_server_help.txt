@@ -1,0 +1,33 @@
+usage: run-server.py [-h] [--all-ipc-benchmarks] [-b BENCHMARK] [-p PORT]
+                     [-r NUM_ROUNDS] [-s SEED] [--separate-session]
+                     [-t TIMEOUT] [-l LOG_DIR] [--monitor-execution]
+                     [-Xms INIT_MEMORY] [-Xmx MAX_MEMORY]
+
+Run rddlsim from directory defined by environment variable RDDLSIM_ROOT.
+
+options:
+  -h, --help                          show this help message and exit
+  --all-ipc-benchmarks                Run all benchmarks. (default: False)
+  -b BENCHMARK, --benchmark BENCHMARK
+                                      Path to RDDL files. (default: None)
+  -p PORT, --port PORT                Port number where rddlsim listens.
+                                      (default: 2323)
+  -r NUM_ROUNDS, --num-rounds NUM_ROUNDS
+                                      Number of rounds. (default: 30)
+  -s SEED, --seed SEED                Random seed. (default: 0)
+  --separate-session                  rddlsim terminates after a separate
+                                      session with a client finishes.
+                                      (default: False)
+  -t TIMEOUT, --timeout TIMEOUT       Total timeout in seconds. No timeout is
+                                      used if timeout is "0". (default: 0)
+  -l LOG_DIR, --log-dir LOG_DIR       Directory where log files are written.
+                                      (default: ./rddlsim_logs)
+  --monitor-execution                 Force client to specify if a round is
+                                      considered. (default: False)
+  -Xms INIT_MEMORY, --init-memory INIT_MEMORY
+                                      Initial amount of memory in MB allocated
+                                      by the Java VM. (default: 100)
+  -Xmx MAX_MEMORY, --max-memory MAX_MEMORY
+                                      Maximum amount of memory in MB that may
+                                      be allocated by the Java VM. (default:
+                                      500)

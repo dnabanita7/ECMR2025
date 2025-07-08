@@ -1,0 +1,52 @@
+
+non-fluents nf_instance_clean_the_room_kitchen_inst {
+    domain = domain_x_robot_anticipation_clean_the_room_kitchen;
+
+    // Objects in the domain
+    objects {
+        location : {kitchencounter, cabinet};
+        item : {soap, washingsponge, towel, broom};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+        COST(robot, kitchencounter, kitchencounter) = 0;
+COST(robot, kitchencounter, cabinet) = 15;
+COST(robot, cabinet, kitchencounter) = 15;
+COST(robot, cabinet, cabinet) = 0;
+        
+        
+        MOP_ITEM(broom) = true;
+        
+        
+        APPLIANCE(cabinet) = true;
+        
+        
+        DESTINATION_0(washingsponge, kitchencounter) = true;
+DESTINATION_1(soap, kitchencounter) = true;
+DESTINATION_2(towel, kitchencounter) = true;
+
+    };
+}
+
+instance instance_clean_the_room_kitchen {
+    domain = domain_x_robot_anticipation_clean_the_room_kitchen;
+    non-fluents = nf_instance_clean_the_room_kitchen_inst;
+
+    init-state {
+        agent-loc(robot, kitchencounter) = true;
+        human-loc(human, cabinet) = true;
+
+        obj-loc(broom, cabinet) = true;
+
+        obj-loc(soap, kitchencounter) = true;
+obj-loc(washingsponge, kitchencounter) = true;
+obj-loc(towel, kitchencounter) = true;
+    };
+
+    max-nondef-actions = 1;
+    horizon = 35;
+    discount = 1.0;
+}
+    

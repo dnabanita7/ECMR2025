@@ -1,0 +1,84 @@
+
+non-fluents nf_instance_serve_breakfast_eggs_inst {
+    domain = domain_x_robot_anticipation_serve_breakfast_eggs;
+
+    // Objects in the domain
+    objects {
+        location : {sink, stove, microwave, kitchencounter, cabinet};
+        item : {plate_1, water, mop, eggs, pan, plate};
+        agent : {robot};
+        human : {human};
+    };
+
+    non-fluents {
+        COST(robot, sink, sink) = 0;
+COST(robot, sink, stove) = 12;
+COST(robot, sink, microwave) = 15;
+COST(robot, sink, kitchencounter) = 12;
+COST(robot, sink, cabinet) = 18;
+COST(robot, stove, sink) = 19;
+COST(robot, stove, stove) = 0;
+COST(robot, stove, microwave) = 11;
+COST(robot, stove, kitchencounter) = 14;
+COST(robot, stove, cabinet) = 16;
+COST(robot, microwave, sink) = 17;
+COST(robot, microwave, stove) = 19;
+COST(robot, microwave, microwave) = 0;
+COST(robot, microwave, kitchencounter) = 11;
+COST(robot, microwave, cabinet) = 11;
+COST(robot, kitchencounter, sink) = 16;
+COST(robot, kitchencounter, stove) = 19;
+COST(robot, kitchencounter, microwave) = 20;
+COST(robot, kitchencounter, kitchencounter) = 0;
+COST(robot, kitchencounter, cabinet) = 18;
+COST(robot, cabinet, sink) = 19;
+COST(robot, cabinet, stove) = 14;
+COST(robot, cabinet, microwave) = 17;
+COST(robot, cabinet, kitchencounter) = 18;
+COST(robot, cabinet, cabinet) = 0;
+        FRAGILE(plate) = true;
+FRAGILE(plate_1) = true;
+        FOOD_ITEM(water) = true;
+FOOD_ITEM(eggs) = true;
+        MOP_ITEM(mop) = true;
+        CONTAINER(plate) = true;
+CONTAINER(plate_1) = true;
+CONTAINER(pan) = true;
+        EQUAL(plate, plate_1) = true;
+        APPLIANCE(sink) = true;
+APPLIANCE(cabinet) = true;
+APPLIANCE(stove) = true;
+APPLIANCE(microwave) = true;
+        HAS-SWITCH(sink) = true;
+HAS-SWITCH(stove) = true;
+HAS-SWITCH(microwave) = true;
+        GOAL_0(eggs, pan, stove) = true;
+GOAL_1(eggs, plate, kitchencounter) = true;
+        DESTINATION_0(pan, stove) = true;
+DESTINATION_1(eggs, kitchencounter) = true;
+
+    };
+}
+
+instance instance_serve_breakfast_eggs {
+    domain = domain_x_robot_anticipation_serve_breakfast_eggs;
+    non-fluents = nf_instance_serve_breakfast_eggs_inst;
+
+    init-state {
+        agent-loc(robot, sink) = true;
+        human-loc(human, cabinet) = true;
+
+        obj-loc(mop, cabinet) = true;
+
+        obj-loc(water, sink) = true;
+obj-loc(plate_1, kitchencounter) = true;
+obj-loc(eggs, kitchencounter) = true;
+obj-loc(pan, kitchencounter) = true;
+obj-loc(plate, kitchencounter) = true;
+    };
+
+    max-nondef-actions = 1;
+    horizon = 35;
+    discount = 1.0;
+}
+    

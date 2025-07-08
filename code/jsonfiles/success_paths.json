@@ -1,0 +1,144 @@
+{
+    "prepare food": [
+        "<char0> [walk] <kitchen> (1)",
+        "<char0> [grab] <apple> (2)",
+        "<char0> [put] <apple> (2) <plate> (3)"
+    ],
+    "prepare breakfast cereal": [
+        "<char0> [walk] <kitchen> (1)",
+        "<char0> [grab] <cereal> (5)",
+        "<char0> [putin] <cereal> (5) <dishbowl> (6)"
+    ],
+    "prepare breakfast toast": [
+        "<char0> [walk] <kitchen> (1)",
+        "<char0> [grab] <breadslice> (8)",
+        "<char0> [putin] <breadslice> (8) <toaster> (9)",
+        "<char0> [switchon] <toaster> (9)"
+    ],
+    "prepare lunch salmon": [
+        "<char0> [walk] <kitchen> (1)",
+        "<char0> [grab] <salmon> (10)",
+        "<char0> [boil] <salmon> (10) <stove> (4)"
+    ],
+    "serve the food cereal": [
+        "<char0> [walk] <kitchen> (1)",
+        "<char0> [grab] <dishbowl> (6)",
+        "<char0> [walk] <coffeetable> (13)",
+        "<char0> [put] <dishbowl> (6) <coffeetable> (13)"
+    ],
+    "serve a drink water": [
+        "<char0> [walk] <kitchen> (1)",
+        "<char0> [grab] <waterglass> (7)",
+        "<char0> [walk] <coffeetable> (15)",
+        "<char0> [put] <waterglass> (7) <coffeetable> (15)"
+    ],
+    "serve a drink coffee": [
+        "[walk] <kitchen>",
+        "[walk] <cabinet>",
+        "[grab] <coffee>",
+        "[walk] <coffeemaker>",
+        "[putin] <coffee> <coffeemaker>",
+        "[switchon] <coffeemaker>",
+        "[switchoff] <coffeemaker>",
+        "[grab] <glass>",
+        "[put] <coffee> <glass>",
+        "[grab] <glass>",
+        "[walk] <coffeetable>",
+        "[put] <glass> <coffeetable>"
+    ],
+    "serve dinner pizza": [
+        "<char0> [walk] <kitchen> (1)",
+        "[walk] <cabinet>",
+        "<char0> [grab] <pizza-base>",
+        "[walk] <oven>",
+        "[put] <pizza_base> <oven>",
+        "[switchon] <oven>",
+        "[switchoff] <oven>",
+        "[grab] <pizza>",
+        "[walk] <countertop>",
+        "[grab] <plate>",
+        "[putin] <pizza> <plate>",
+        "[grab] <plate>",
+        "[walk] <coffeetable>",
+        "[put] <plate> <coffeetable>"
+    ],
+    "serve breakfast eggs": [
+        "[walk] <kitchen> (1)",
+        "[walk] <fridge>",
+        "[open] <fridge>",
+        "[grab] <eggs>",
+        "[close] <fridge>",
+        "[walk] <pan>",
+        "[putin] <eggs>",
+        "[grab] <pan>",
+        "[walk] <sink>",
+        "[switchon] <faucet>",
+        "[putin] <water> <pan>",
+        "[switchoff] <faucet>",
+        "[walk] <stove>",
+        "[put] <pan> <stove>",
+        "[switchon] <stove>",
+        "[switchoff] <stove>",
+        "[grab] <plate>",
+        "[grab] <eggs>",
+        "[putin] <eggs> <plate>",
+        "[grab] <plate>",
+        "[walk] <coffeetable>",
+        "[put] <plate> <coffeetable>"
+    ],
+    "serve breakfast fruits": [
+        "[walk] <kitchen>",
+        "[walk] <countertop>",
+        "[grab] <apple>",
+        "[grab] <knife>",
+        "[put] <knife> <apple>",
+        "[putin] <apple> <dishbowl>",
+        "[grab] <banana>",
+        "[put] <knife> <banana>",
+        "[putin] <banana> <dishbowl>",
+        "[grab] <dishbowl>",
+        "[walk] <coffeetable>",
+        "[put] <dishbowl> <coffeetable>"
+    ],
+        
+        
+    "wash the dishes": [
+        "<char0> [walk] <sink> (16)",
+        "<char0> [grab] <plate> (3)",
+        "<char0> [putin] <plate> (3) <sink> (16)",
+        "<char0> [switchon] <faucet> (17)",
+        "[grab] <cleaning_solution>",
+        "[grab] <washingsponge>",
+        "[putin] <cleaning_solution> <plate>",
+        "[putin] <washingsponge> <plate>",
+        "<char0> [clean] <plate> (3)",
+        "<char0> [switchoff] <faucet> (17)"
+    ],
+
+    "do the laundry": [
+        "<char0> [walk] <closet> (18)",
+        "<char0> [grab] <clothesshirt> (19)",
+        "<char0> [walk] <washingmachine> (20)",
+        "<char0> [putin] <clothesshirt> (19) <washingmachine> (20)",
+        "<char0> [switchon] <washingmachine> (20)",
+        "[switchoff] <washingmachine>"
+    ],
+    "clean the room kitchen": [
+        "<char0> [walk] <kitchen> (1)",
+        "<char0> [grab] <washingsponge> (21)",
+        "[walk] <countertop>",
+        "<char0> [put] <washingsponge> <countertop> (22)",
+        "[clean] <countertop>"
+    ],
+    "clean the room bathroom": [
+            "<char0> [walk] <bathroom> (1)",
+            "<char0> [grab] <washingsponge> (2)",
+            "<char0> [put] <washingsponge> <sink> (3)",
+            "[clean] <sink>",
+            "<char0> [grab] <mop> ",
+            "<char0> [put] <mop> <floor>",
+            "[clean] <mop>",
+            "<char0> [grab] <garbagecan> (6)",
+            "<char0> [putin] <trash> (7) <garbagecan> (6)"
+    ]
+}
