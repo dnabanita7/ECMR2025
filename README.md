@@ -16,13 +16,20 @@ The system:
 ## Directory Layout
 
 code/
-├── jsonfiles/ # prompts, task lists, mappings
+├── jsonfiles/ # prompts, task lists, mappings 
+
 ├── rddl/ # domain templates + hand-written instances
+
 ├── generated_instances/ # auto-generated instances (ours)
+
 ├── generated_instances_baseline/
+
 ├── outputs/ # plans, logs, metrics
+
 ├── *.py # pipeline scripts (see below)
+
 └── requirements.txt # minimal PyPI deps
+
 
 
 1. **Prerequisites**
@@ -72,9 +79,9 @@ code/
    - Additional `.rddl` files – toy/baseline domains
 
 5. **Reproduce Paper Metrics**
-   # Completion
+   ##### Completion
    python evaluate_baseline_wrt_ours.py --metric success
-   # Recovery
+   ##### Recovery
    python evaluate_baseline_wrt_ours.py --metric recovery
-   # Efficiency
+   ##### Efficiency
    python evaluate_baseline_wrt_ours.py --metric actions
