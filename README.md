@@ -79,9 +79,62 @@ code/
    - Additional `.rddl` files – toy/baseline domains
 
 5. **Reproduce Paper Metrics**
-   ##### Completion
+   #### Completion
    python evaluate_baseline_wrt_ours.py --metric success
-   ##### Recovery
+   #### Recovery
    python evaluate_baseline_wrt_ours.py --metric recovery
-   ##### Efficiency
+   #### Efficiency
    python evaluate_baseline_wrt_ours.py --metric actions
+
+
+6. **Customising**
+   - **LLM model**  
+     Switch from Groq to OpenAI by exporting `OPENAI_API_KEY` and replacing the client in `llm_task_handler.py`:
+
+     ```python
+     from openai import OpenAI
+     ...
+     client = OpenAI()   # instead of Groq()
+     ```
+
+   - **Simulator path**  
+     Edit `VH_SIM_PATH` in `run_virtualhome.py`:
+
+     ```python
+     VH_SIM_PATH = os.environ.get(
+         "VIRTUALHOME_SIM",
+         "/abs/path/to/virtualhome/simulation/"
+     )
+     ```
+
+   - **PROST location**  
+     `run_llm_pipeline.py` assumes:
+
+     ```python
+     prost_testbed_dir = os.path.expanduser("~/prost/testbed")
+     prost_dir        = os.path.expanduser("~/prost")
+     ```
+
+     Change these variables if your PROST build lives elsewhere.
+
+---
+
+7. **Troubleshooting**
+
+| Issue                                   | Remedy                                                                                                   |
+|-----------------------------------------|-----------------------------------------------------------------------------------------------------------|
+| `UnityCommunication` import error       | Verify `VH_SIM_PATH` and run `pip install -e virtualhome/simulation`.                                     |
+| PROST stalls at 0 %                     | Increase the `time.sleep()` delay in `run_llm_pipeline.py` (slow disks or heavy instances).               |
+| LLM quota reached or rate-limit errors  | Reduce the task list in `jsonfiles/llm_tasks.json` while debugging, or cache responses in `outputs/`.     |
+| Simulator crashes mid-run               | Check Unity build version, GPU drivers, and ensure the correct scene name in `run_virtualhome.py`.        |
+
+---
+
+8. **Licence**
+
+| Asset                 | Licence               |
+|-----------------------|-----------------------|
+| Code and scripts      | MIT                   |
+| RDDL domain text      | CC BY-NC-SA 4.0       |
+| VirtualHome assets    | Apache-2.0 (upstream) |
+
