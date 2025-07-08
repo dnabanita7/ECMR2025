@@ -15,21 +15,17 @@ The system:
 
 ## Directory Layout
 
+```sh
 code/
-├── jsonfiles/ # prompts, task lists, mappings 
-
-├── rddl/ # domain templates + hand-written instances
-
-├── generated_instances/ # auto-generated instances (ours)
-
-├── generated_instances_baseline/
-
-├── outputs/ # plans, logs, metrics
-
-├── *.py # pipeline scripts (see below)
-
-└── requirements.txt # minimal PyPI deps
-
+├── jsonfiles/                 # prompts, task lists, mappings
+├── rddl/                      # domain templates + hand-written instances
+├── generated_instances/       # auto-generated instances (ours)
+├── generated_instances_baseline/ # baseline without anticipation
+├── llm_only_baseline/
+├── outputs/                   # plans, logs, metrics
+├── *.py                       # pipeline scripts (see below)
+└── requirements.txt           # minimal PyPI deps
+```
 
 
 1. **Prerequisites**
@@ -63,20 +59,20 @@ code/
       ```
 
 3. **Script Overview**
-   - `llm_task_handler.py` &nbsp;→ anticipates tasks with LLM  
-   - `create_instances.py` &nbsp;→ fills RDDL templates  
-   - `run_llm_pipeline.py` &nbsp;→ runs PROST planner  
-   - `translate_rddl_to_virtualhome.py` &nbsp;→ converts plans  
-   - `run_virtualhome.py` &nbsp;→ executes in simulator  
-   - `simulate_tasks.py` &nbsp;→ robustness roll-outs  
-   - `evaluate_baseline_wrt_ours.py` &nbsp;→ paper metrics
+   - `llm_task_handler.py` : anticipates tasks with LLM  
+   - `create_instances.py` : fills RDDL templates  
+   - `run_llm_pipeline.py` : runs PROST planner  
+   - `translate_rddl_to_virtualhome.py` : converts plans  
+   - `run_virtualhome.py` : executes in simulator  
+   - `simulate_tasks.py` : robustness roll-outs  
+   - `evaluate_baseline_wrt_ours.py` : paper metrics
 
 4. **Configuration Files**
-   - `jsonfiles/master_tasks.json` – seed vocabulary  
-   - `jsonfiles/llm_tasks.json` – generated tasks per run  
-   - `jsonfiles/rddl_goals.json` – LLM-to-RDDL mapping  
-   - `rddl/domain_x_robot_anticipation.rddl` – main domain  
-   - Additional `.rddl` files – toy/baseline domains
+   - `jsonfiles/master_tasks.json` : seed vocabulary  
+   - `jsonfiles/llm_tasks.json` : generated tasks per run  
+   - `jsonfiles/rddl_goals.json` :  LLM-to-RDDL mapping  
+   - `rddl/domain_x_robot_anticipation.rddl` : main domain  
+   - Additional `.rddl` files – misc toy/baseline domains
 
 5. **Reproduce Paper Metrics**
    #### Completion
